@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Начальная страница";
+}
+<div class="row"><p></p></div>
+<div class="row">
+    <div class="col-lg-3 client_resizable">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Перечень Фондов</div>
+            <div class="panel-body">
+                @using (Ajax.BeginForm("GetNavClient", null, new AjaxOptions { UpdateTargetId = "list_deport", InsertionMode = InsertionMode.Replace }, new { @name = "form_list_deport" }))
+                {
+                    <div class="form-group">
+                        @Html.DropDownList("deport", (IEnumerable<SelectListItem>)ViewBag.Deport, new { @id = "deport", @class = "form-control" })
+                    </div>
+                }
+                <div class="panel-group" role="tablist" style="height:500px; overflow-y: scroll;">
+                    <div id="list_deport">
+                        @{Html.RenderAction("GetNavClient", "Home");}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div id="Filelist">
+            <div class="panel panel-primary">
+                <div class="panel-heading client_fond_str">Перечень Файлов:</div>
+                <div class="panel-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Отчетность Клиента</div>
+            <div class="panel-body">
+                <div id="file_task_list_form">@{Html.RenderAction("TaskListForm");}</div>
+                <div id="file_task_list">
+                    @{Html.RenderAction("TaskList");}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modDialogSverka" class="modal fade" tabindex="-1" role="dialog">
+    <div id="dialogContentSverka" class="modal-dialog modal-lg"></div>
+</div>
+<div id="modDialogClose" class="modal fade" tabindex="-1" role="dialog">
+    <div id="dialogContentClose" class="modal-dialog modal-lg"></div>
+</div>
+<div id="modDialogSignFile" class="modal fade" tabindex="-1" role="dialog">
+    <div id="dialogContentSignFile" class="modal-dialog modal-lg"></div>
+</div>

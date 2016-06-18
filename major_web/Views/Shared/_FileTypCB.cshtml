@@ -1,0 +1,118 @@
+﻿@model major_data.Models.FileInSystem
+@using major_data.Models
+
+
+@if (Model.FileType != FileType.OtherFile && Model.RouteFile == true && User.IsInRole("Signature"))
+{
+
+    switch (Model.FileStatus)
+    {
+        case m_FileStatus.Open:
+        case m_FileStatus.ReOpen:
+            <div class="nachalnik cb-open" data-id="@Model.Id">
+                <button data-id="@Model.Id" class="btn btn-primary btn-sm cb-open">Взять на себя</button>
+            </div>
+            <div class="nachalnik cb-sign" data-id="@Model.Id">
+                <button type="button" class="btn btn-danger btn-sm cb-close" data-toggle="tooltip" data-placement="top" title="Закрыть" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-info btn-sm cb-return" data-toggle="tooltip" data-placement="top" title="Вернуть менеджеру" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-success btn-sm cb-sign" data-toggle="tooltip" data-placement="top" title="Подписать" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("div.cb-open[data-id=" + @Model.Id + "]").show();
+                    $("div.cb-sign[data-id=" + @Model.Id + "]").hide();
+                });
+            </script>
+            break;
+        case m_FileStatus.NaPodpis:
+            <div class="nachalnik cb-open" data-id="@Model.Id">
+                <button data-id="@Model.Id" class="btn btn-primary btn-sm cb-open">Взять на себя</button>
+            </div>
+            <div class="nachalnik cb-sign" data-id="@Model.Id">
+                <button type="button" class="btn btn-danger btn-sm cb-close" data-toggle="tooltip" data-placement="top" title="Закрыть" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-info btn-sm cb-return" data-toggle="tooltip" data-placement="top" title="Вернуть менеджеру" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-success btn-sm cb-sign" data-toggle="tooltip" data-placement="top" title="Подписать" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("div.cb-open[data-id=" + @Model.Id + "]").hide();
+                    $("div.cb-sign[data-id=" + @Model.Id + "]").show();                    
+                });
+            </script>
+            break;
+        case m_FileStatus.Close:
+
+            break;
+        case m_FileStatus.Podpisan:
+            { Html.RenderAction("SendFile", null, new { id = Model.Id }); }
+            break;
+    }
+}
+else if (Model.FileType != FileType.OtherFile && Model.RouteFile == true && User.IsInRole("Viewing"))
+{
+    switch (Model.FileStatus)
+    {
+        case m_FileStatus.Open:
+        case m_FileStatus.ReOpen:
+            <div class="manager cb-to-sign" data-id="@Model.Id">
+                <button type="button" class="btn btn-danger btn-sm cb-close" data-toggle="tooltip" data-placement="top" title="Закрыть" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-success btn-sm cb-to-sign" data-toggle="tooltip" data-placement="top" title="На подпись" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+            </div>
+                    <div class="manager cb-return" data-id="@Model.Id">
+                        <button type="button" class="btn btn-info btn-sm cb-return" data-toggle="tooltip" data-placement="top" title="Вернуть менеджеру" data-id="@Model.Id">
+                            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("div.cb-to-sign[data-id=" + @Model.Id + "]").show();
+                            $("div.cb-return[data-id=" + @Model.Id + "]").hide();
+                        })
+                    </script>
+            break;
+        case m_FileStatus.NaPodpis:
+            <div class="manager cb-to-sign btn-group" role="group" data-id="@Model.Id">
+                <button type="button" class="btn btn-danger btn-sm cb-close" data-toggle="tooltip" data-placement="top" title="Закрыть" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-success btn-sm cb-to-sign" data-toggle="tooltip" data-placement="top" title="На подпись" data-id="@Model.Id">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                </button>
+            </div>
+                    <div class="manager cb-return" data-id="@Model.Id">
+                        <button type="button" class="btn btn-info btn-sm cb-return" data-toggle="tooltip" data-placement="top" title="Вернуть менеджеру" data-id="@Model.Id">
+                            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("div.cb-to-sign[data-id=" + @Model.Id + "]").hide();
+                            $("div.cb-return[data-id=" + @Model.Id + "]").show();
+                        })
+                    </script>
+            break;
+        case m_FileStatus.Close:
+
+            break;
+        case m_FileStatus.Podpisan:
+            { Html.RenderAction("SendFile", null, new { id = Model.Id }); }
+            break;
+    }
+}
+

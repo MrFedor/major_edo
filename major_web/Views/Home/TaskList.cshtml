@@ -1,0 +1,127 @@
+﻿@model IEnumerable<major_data.Models.FileInSystem>
+@using major_data.Models
+
+<div class="table">
+    <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th style="width:5%;"></th>
+                <th style="width:20%;">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RuleSystem.Dogovor.Client.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RuleSystem.Fond.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataCreate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CBInfo.TypeXML.Xml_type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CBInfo.PeriodXML)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CBInfo.Comment)
+                </th>
+                <th>
+                    Действие с файлом
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string tr_fon = "";
+                m_FileStatus type_file = item.FileStatus;
+                switch (type_file)
+                {
+                    case m_FileStatus.Close:
+                        tr_fon = "danger";
+                        break;
+                    case m_FileStatus.NaPodpis:
+                        tr_fon = "active";
+                        break;
+                    case m_FileStatus.ReOpen:
+                        tr_fon = "warning";
+                        break;
+                    case m_FileStatus.Podpisan:
+                        tr_fon = "success";
+                        break;
+                }
+                <tr data-id="@item.Id" class="@tr_fon">
+                    <td>
+                        @if (item.FileType == FileType.FileCB && item.CBInfo.VerifySig == true)
+                        {
+                            <a tabindex="0" role="button" class="btn btn-success btn-sm butt_sig_popover" data-toggle="popover" data-id="@item.Id">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            </a>
+                        }
+                        else if (item.FileType == FileType.FileCB && item.CBInfo.VerifySig == false)
+                        {
+                            <a tabindex="0" role="button" class="btn btn-danger btn-sm butt_sig_popover" data-toggle="popover" data-id="@item.Id">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
+                        }
+                        @if (item.FileType == FileType.FileCB && item.RouteFile == true)
+                        {
+                            <a tabindex="0" role="button" class="btn btn-info btn-sm butt_sverka" data-toggle="tooltip" data-placement="top" title="Сравнить" data-id="@item.Id">
+                                <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span>
+                            </a>
+                            <div id="modDialog" class="modal fade" tabindex="-1" role="dialog">
+                                <div id="dialogContent" class="modal-dialog modal-lg"></div>
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Name, "Download", new { id = @item.Id, file_in = true }, null)
+                    </td>
+
+                    <td>
+                        <p>@item.RuleSystem.Dogovor.Client.Name</p>
+                    </td>
+                    <td>
+                        <p>@item.RuleSystem.Fond.Name</p>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataCreate)
+                    </td>
+                    <td>
+                        @if (item.CBInfo.TypeXML != null)
+                        {
+                            <p>@item.CBInfo.TypeXML.Xml_type</p>
+                        }
+                        else
+                        {
+                            <p></p>
+                        }
+                    </td>
+                    <td>
+                        @if (item.CBInfo != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.CBInfo.PeriodXML)
+                        }
+                    </td>
+                    <td class="comment_cb">
+                        @if (item.CBInfo != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.CBInfo.Comment)
+                        }
+                    </td>
+                    <td class="send_file_cb">
+                        @{Html.RenderPartial("_FileTypCB", item);}
+                    </td>
+                </tr>
+                            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" })
+    });
+</script>

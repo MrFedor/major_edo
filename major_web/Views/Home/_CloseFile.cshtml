@@ -1,0 +1,48 @@
+﻿@model major_data.Models.FileInSystem
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Вы уверены, что хотите Закрыть файл ЦБ?</h4>
+    </div>
+    <div class="modal-body">
+        <div>
+            @Html.HiddenFor(a => a.Id)
+            <table class="table table-responsive">
+                <tr>
+                    <td>@Html.DisplayNameFor(a => a.RuleSystem.Dogovor.Client.Name)</td>
+                    <td>@Html.DisplayFor(a => a.RuleSystem.Dogovor.Client.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(a => a.RuleSystem.Fond.Name)</td>
+                    <td>@Html.DisplayFor(a => a.RuleSystem.Fond.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(a => a.Name)</td>
+                    <td>@Html.DisplayFor(a => a.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(a => a.DataCreate)</td>
+                    <td>@Html.DisplayFor(a => a.DataCreate)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(a => a.CBInfo.TypeXML.Xml_type)</td>
+                    <td>@Html.DisplayFor(a => a.CBInfo.TypeXML.Xml_type)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(a => a.CBInfo.PeriodXML)</td>
+                    <td>@Html.DisplayFor(a => a.CBInfo.PeriodXML)</td>
+                </tr>
+            </table>
+        </div>
+        <div class="requeri_comment"><p class="bg-danger"></p></div>
+        @Html.TextArea("comment_close_cb", new { @class = "form-control", placeholder = "Комментарий" })
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default button_close_cb" name="button_close_cb" type="button">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Закрыть файл
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+    </div>
+</div>
+
+

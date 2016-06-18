@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title – приложение АО "ОСД"</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/signalR")
+    @Scripts.Render("~/bundles/daterangepicker")
+    
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("АО \"ОСД\"", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid body-content">
+        @RenderBody()
+        <div class="row">
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year – приложение АО "ОСД"</p>
+            </footer>
+        </div>
+        
+    </div>   
+
+
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")    
+    @if (Request.IsAuthenticated)
+    {
+        @Scripts.Render("~/bundles/sitejs")
+        <script src="~/signalr/hubs"></script>
+        <script src="~/Scripts/habsignalr.js"></script>
+    }
+
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

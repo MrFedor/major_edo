@@ -1,0 +1,81 @@
+﻿@model IEnumerable<major_data.Models.CBCert>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FIO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Client)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date_s)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date_po)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VerifySig)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment_VerifySig)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VerifyCert)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment_VerifyCert)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date_sig)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FIO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_s)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_po)
+            </td>
+            <td>
+                @if (item.VerifySig == true)
+                {
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment_VerifySig)
+            </td>
+            <td>
+                @if (item.VerifyCert == true)
+                {
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                }               
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment_VerifyCert)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_sig)
+            </td>
+        </tr>
+    }
+
+</table>

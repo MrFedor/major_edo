@@ -1,0 +1,55 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading client_fond_str">Перечень Файлов:  @ViewBag.client_fond_str</div>
+    <div class="panel-body">
+        <div>
+            <div id="file_list_form">@{Html.RenderPartial("FileListForm");}</div>
+            <div id="file_list" style="height:500px; overflow-y: scroll;">@{Html.RenderAction("SearchFiles");}</div>
+        </div>        
+    </div>
+</div>
+
+
+@*<script type="text/javascript">
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" })
+    });
+
+    var chek = $('input[name="id_checkbox"]');
+    if (chek.is(":checked")) {
+        $('#date_folder').hide();
+        $('#form_date_in_edo').show();
+    }
+    else {
+        $('#date_folder').show();
+        $('#form_date_in_edo').hide();
+    }
+
+    chek.on('change', function () {
+        if (chek.is(":checked")) {
+            $('#date_folder').hide();
+            $('#form_date_in_edo').show();
+        }
+        else {
+            $('#date_folder').show();
+            $('#form_date_in_edo').hide();
+        }
+
+    });
+
+
+
+
+
+
+    moment.locale('ru');
+    $('input[name="form_date_in_edo"]').daterangepicker({
+        format: 'DD.MM.YYYY',
+        locale: {
+            applyLabel: 'Готово',
+            cancelLabel: 'Отмена',
+            fromLabel: 'С',
+            toLabel: 'Пo'
+        }
+    });
+</script>*@

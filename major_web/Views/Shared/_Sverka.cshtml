@@ -1,0 +1,64 @@
+﻿@model major_data.Models.FileInSystem
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Сравнение файлов ЦБ</h4>
+    </div>
+    <div class="modal-body">
+        @*@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @name = "form_sverka" }))*@
+            @using (Ajax.BeginForm("Upload", null, new AjaxOptions { UpdateTargetId = "Sverka_resault", InsertionMode = InsertionMode.Replace }, new { @name = "form_sverka" }))
+            {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("file_client_in", Model.Id)
+
+                <div class="form-group">
+                    <label for="file_out">Файл УК:</label>
+                    <p id="file_out">@Model.Name</p>
+                </div>
+
+            @*<div>Файл УК: @Model.Name</div>*@
+
+            <div class="form-group">
+                <label for="file_nash_out">Наш файл: </label>
+                @Html.DropDownList("file_nash_out", (IEnumerable<SelectListItem>)ViewBag.list_file, "--- Выберите файл ---", new { @id = "file_nash_out", @class = "form-control" })
+            </div>
+
+            @*<fieldset>
+                <legend>Upload a file</legend>
+                <div class="editor-field">
+                    @Html.TextBox("file", "", new { type = "file" })
+                </div>
+                <div class="editor-field">
+                    <input type="submit" value="Upload" />
+                </div>
+            </fieldset>*@
+        }
+        <div id="Sverka_resault"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default button_sverka" name="button_sverka" type="button">
+            <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span> Сравнить
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('button.button_sverka').on('click', function () {
+            //$.ajax({
+            //    dataType: "html",
+            //    cache: false,
+            //    type: 'POST',
+            //    url: "/Home/Upload/",
+            //    data: {
+            //        file_client_in: $('#file_client_in').val(),
+            //        file_nash_out: $('select#file_nash_out').val(),
+            //    }                
+            //});
+            var form_sverka = $('form[name="form_sverka"]');
+            form_sverka.submit();
+        });
+    });
+</script>

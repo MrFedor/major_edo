@@ -1,0 +1,5 @@
+﻿@model major_data.Models.FileInSystem
+@if (Model != null)
+{
+    @Html.ActionLink(Model.DataCreate.ToString(), "Download", new { id = Model.Id, file_in = false }, new { data_toggle = "tooltip", data_placement = "top", title = "Отправленный файл" })
+}

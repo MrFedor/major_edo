@@ -1,0 +1,50 @@
+﻿@using (Ajax.BeginForm("SearchTaskList", null, new AjaxOptions { UpdateTargetId = "file_task_list", InsertionMode = InsertionMode.Replace }, new { @class = "form-horizontal", @id = "form_searchtasklist", @name = "form_searchtasklist" }))
+{
+
+    <div class="form-group">
+        <label for="name_file" class="col-sm-2 control-label">Имя файла</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="name_file" id="name_file" placeholder="Имя Файла">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="data_l_contragent" class="col-sm-2 control-label">Клиент</label>
+        <div class="col-sm-6">
+            <div class="input-prepend input-group">
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                @Html.DropDownList("data_l_contragent", (IEnumerable<SelectListItem>)ViewBag.l_contragent, "--- Все ---", new { @id = "data_l_contragent", @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="data_l_fond" class="col-sm-2 control-label">Наименование фонда</label>
+        <div class="col-sm-6">
+            <div class="input-prepend input-group">
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                @Html.DropDownList("data_l_fond", (IEnumerable<SelectListItem>)ViewBag.l_fond, "--- Все ---", new { @id = "data_l_fond", @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="date_in_edo">
+        <label for="date_in_edo" class="col-sm-2 control-label">Дата создания файла</label>
+        <div class="col-sm-6">
+            <div class="input-prepend input-group">
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                @Html.TextBox("date_in_edo", null, new { @class = "form-control", placeholder = "Период получения документа" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="data_l_type" class="col-sm-2 control-label">Тип отчета</label>
+        <div class="col-sm-6">
+            <div class="input-prepend input-group">
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                @Html.DropDownList("data_l_type", (IEnumerable<SelectListItem>)ViewBag.l_type, "--- Все ---", new { @id = "data_l_type", @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit" name="submit_button">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Выбрать
+    </button>
+
+}

@@ -1,0 +1,72 @@
+﻿@model List<IGrouping<Dogovor, RuleSystem>>
+@using major_data.Models
+
+
+@foreach (IGrouping<Dogovor, RuleSystem> item in Model)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">            
+            <h4 class="panel-title">                
+                <a class="collapsed" aria-controls="collapseListGroup1" aria-expanded="false" href="#@item.Key.Id" data-toggle="collapse" role="button">
+                    <strong>@item.Key.Client.Name</strong>
+                </a>
+            </h4>
+        </div>
+        <div id="@item.Key.Id" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+            <div class="list-group">                
+                @foreach (RuleSystem _fond in item)
+                {
+                    if (_fond.Fond != null)
+                    {
+                        @Ajax.ActionLink(_fond.Fond.Name.ToString(),
+                       "FileList",
+                       new { id_rule = _fond.Id, file_in = true },
+                       new AjaxOptions
+                       {
+                           UpdateTargetId = "Filelist",
+                           InsertionMode = InsertionMode.Replace,
+                       },
+                       new { @class = "list-group-item menu_link" })
+                    }
+                    else
+                    {
+                        @Ajax.ActionLink(item.Key.Client.Name.ToString(),
+                       "FileList",
+                       new { id_rule = _fond.Id, file_in = true },
+                       new AjaxOptions
+                       {
+                           UpdateTargetId = "Filelist",
+                           InsertionMode = InsertionMode.Replace,
+                       },
+                       new { @class = "list-group-item menu_link" })
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+}
+
+<script type="text/javascript">
+
+    var _href_old = "";
+    var a_active = $("a.menu_link")
+
+    a_active.on('click', function () {
+
+        _href = $(this).attr('href');
+
+        if (_href != _href_old && _href_old != "") {            
+            $("a.menu_link[href='" + _href_old + "']").removeClass("active");
+            _href_old = _href;
+            $(this).addClass("active");
+        }
+        
+        if (_href_old == "") {
+            _href_old = _href;
+            $(this).addClass("active");
+        }
+        
+    });
+
+</script>
