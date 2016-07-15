@@ -1,9 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />*@
+    
     <title>@ViewBag.Title – приложение АО "ОСД"</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -11,9 +13,143 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/signalR")
     @Scripts.Render("~/bundles/daterangepicker")
-    
+    @Scripts.Render("~/bundles/dhtmlxcombo")
+
+    <script type="text/javascript">
+        //document.body
+        var myLayout;
+        function doOnLoad() {
+            if ($("#index_body").length > 0) {
+                myLayout = new dhtmlXLayoutObject({
+                    parent: document.body,
+                    pattern: "3U",
+                    skin: "material",
+                    offsets: {
+                        top: 50,
+                        right: 10,
+                        bottom: 10,
+                        left: 10
+                    },
+                    cells: [
+                        {
+                            id: "a",
+                            text: "Перечень Фондов",
+                            collapsed_text: "Перечень Фондов",
+                            header: true,
+                            width: 350,
+                            collapse: false
+                        },
+                        {
+                            id: "b",
+                            text: "Перечень Файлов:",
+                            collapsed_text: "Перечень Файлов",
+                            header: true,
+                            collapse: false
+                        },
+                        {
+                            id: "c",
+                            text: "Отчетность Клиента",
+                            collapsed_text: "Отчетность Клиента",
+                            header: true,
+                            collapse: false
+                        }]
+
+                });
+                var id_cell_a = "a";
+                var id_cell_b = "b";
+                var id_cell_c = "c";
+
+                myLayout.attachEvent("onContentLoaded", function (id_cell_a) {
+                    $('#list_deport').height(function (value) {
+                        var h = myLayout.cells(id_cell_a).getHeight();
+                        return (h - 42 - 7 - 20 - $('#Department').height());
+                    });
+                });
+
+                myLayout.attachEvent("onContentLoaded", function (id_cell_c) {
+                    $('#file_task_list').height(function (value) {
+                        var h = myLayout.cells(id_cell_c).getHeight();
+                        return (h - 42 - 14 - $('#file_task_list_form').height());
+                    });
+                });
+
+                //myLayout.attachEvent("onContentLoaded", function (id_cell_b) {
+                //    $('#file_list').height(function (value) {
+                //        var h = myLayout.cells(id_cell_b).getHeight();
+                //        return (h - 42 - 14 - $('#file_list_form').height());
+                //    });
+                //});
+
+                //myLayout.cells(id_cell_a).progressOn();
+                myLayout.cells(id_cell_a).attachURL("/Home/NavClientDepartment/", true);
+                //myLayout.cells(id_cell_a).progressOff();
+                myLayout.cells(id_cell_b).attachHTMLString('<div id="Filelist"></div>');
+                myLayout.cells(id_cell_c).attachURL("/Home/TaskListForm/", true);
+
+                //myLayout.cells("a").attachObject("client_resizable");
+                //myLayout.cells("b").attachObject("Filelist");
+                //myLayout.cells("c").attachObject("TaskList_layout");
+
+                myLayout.attachEvent("onResizeFinish", function () {
+                    $('#file_list').height(function (index, value) {
+                        var h = myLayout.cells(id_cell_b).getHeight();
+                        return h - 42 - 14 - $('#file_list_form').height();
+                    });
+
+                    $('#list_deport').height(function (index, value) {
+                        var h = myLayout.cells(id_cell_a).getHeight();
+                        return (h - 42 - 7 - 20 - $('#Department').height());
+                    });
+
+                    $('#file_task_list').height(function (value) {
+                        var h = myLayout.cells(id_cell_c).getHeight();
+                        return (h - 42 - 14 - $('#file_task_list_form').height());
+                    });
+                });
+
+                myLayout.attachEvent("onPanelResizeFinish", function () {
+                    $('#file_list').height(function (index, value) {
+                        var h = myLayout.cells(id_cell_b).getHeight();
+                        return h - 42 - 14 - $('#file_list_form').height();
+                    });
+
+                    $('#list_deport').height(function (index, value) {
+                        var h = myLayout.cells(id_cell_a).getHeight();
+                        return (h - 42 - 7 - 20 - $('#Department').height());
+                    });
+
+                    $('#file_task_list').height(function (value) {
+                        var h = myLayout.cells(id_cell_c).getHeight();
+                        return (h - 42 - 14 - $('#file_task_list_form').height());
+                    });
+                });
+
+                //myLayout.attachEvent("onResizeFinish", function (id_cell_a) {
+                //    $('#list_deport').height(function (index, value) {
+                //        var h = myLayout.cells("a").getHeight();
+                //        return h - 42 - 14 - $('#Department').height();
+                //    });
+                //});
+                //var id_cell_b = "b";
+                //myLayout.attachEvent("onContentLoaded", function (id_cell_b) {
+                //    $('#file_list').height(function (index, value) {
+                //        var h = myLayout.cells("b").getHeight();
+                //        return h - 42 - 14 - $('#file_list_form').height();
+                //    });
+                //});
+            }
+
+
+
+
+            //myLayout.cells("a").dhxcont.mainCont.style.overflow = "auto";
+            //myLayout.cells("b").dhxcont.mainCont.style.overflow = "auto";
+            //myLayout.cells("c").dhxcont.mainCont.style.overflow = "auto";
+        }
+
+    </script>
 </head>
-<body>
+<body onload="doOnLoad();">
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -31,17 +167,14 @@
     </div>
     <div class="container-fluid body-content">
         @RenderBody()
-        <div class="row">
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year – приложение АО "ОСД"</p>
-            </footer>
-        </div>
-        
-    </div>   
+    </div>
 
+    <div id="loading_ajax" style="display:none">
+        @*<img src='loadinggraphic.gif' />*@
+        <img src="/Content/imgs/ring-alt.gif" />
+    </div>
 
-    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")    
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
     @if (Request.IsAuthenticated)
     {
         @Scripts.Render("~/bundles/sitejs")

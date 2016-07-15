@@ -1,0 +1,8 @@
+﻿
+<div id="client_resizable">
+    @Html.DropDownList("Department", null, new { id = "Department", @class = "form-control" })
+
+    <div id="list_deport" class="panel-group" role="tablist">
+        @{Html.RenderAction("GetNavClient"); }
+    </div>
+</div>

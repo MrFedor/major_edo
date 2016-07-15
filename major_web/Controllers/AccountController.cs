@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using major_web.Models;
 using major_data.IdentityModels;
-using major_data.Models;
 
 namespace major_web.Controllers
 {
@@ -106,8 +104,8 @@ namespace major_web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmailConfirmed = true, JoinDate = DateTime.Now};
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var user = new ApplicationUser {FirstName = model.FirstName, UserName = model.UserName, Email = model.Email, EmailConfirmed = true, JoinDate = DateTime.Now};
+                var result = await UserManager.CreateAsync(user, model.Password);                
                 if (result.Succeeded)
                 {
                     //Авто-вход после регистрации

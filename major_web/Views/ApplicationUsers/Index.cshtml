@@ -1,0 +1,15 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Пользователи</h2>
+
+<p>
+    @Html.ActionLink("Добавить пользователя", "Create")
+</p>
+
+@{Html.RenderPartial("SearchFormAppUser");}
+
+@{Html.RenderPartial("SearchAppUser");}

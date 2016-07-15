@@ -26,6 +26,7 @@
     <MetadataFile FileName="service21.xsd" MetadataType="Schema" ID="8b057009-1d85-4b37-9c31-45342fd713e7" SourceId="1" SourceUrl="http://server-edo:9733/major_wcf/MajorService/mex" />
     <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="b1cfe318-e4f8-4e65-a825-5497757ff8d7" SourceId="1" SourceUrl="http://server-edo:9733/major_wcf/MajorService/mex" />
     <MetadataFile FileName="Message.xsd" MetadataType="Schema" ID="0a041bf2-0e32-4da3-9174-36ccbcb00bc6" SourceId="1" SourceUrl="http://server-edo:9733/major_wcf/MajorService/mex" />
+    <MetadataFile FileName="System.Security.Cryptography.X509Certificates.xsd" MetadataType="Schema" ID="f286046a-db59-4875-bc8b-659eca7a860c" SourceId="1" SourceUrl="http://server-edo:9733/major_wcf/MajorService/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

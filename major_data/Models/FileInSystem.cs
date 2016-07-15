@@ -29,7 +29,7 @@
         public FileType FileType { get; set; }
 
         [Display(Name = "Стату файла")]
-        public m_FileStatus FileStatus { get; set; }
+        public FileStatus FileStatus { get; set; }
 
         [Display(Name = "Направление файла")]        
         public bool RouteFile { get; set; }
@@ -37,5 +37,6 @@
         public virtual FileInSystem FileIn { get; set; }
         public virtual RuleSystem RuleSystem { get; set; }
         public virtual CBInfo CBInfo { get; set; }
+        public virtual FileRequst FileRequst { get; set; }
     }
 }

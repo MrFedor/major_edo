@@ -1,0 +1,601 @@
+﻿@model client_data.Models.RequestDeposits
+@using major_fansyspr
+
+@{
+    ViewBag.Title = "Запрос согласия на распоряжение имуществом";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm("Create", "RequestDeposits"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.AppUserId)
+        @Html.HiddenFor(model => model.Request)
+        @Html.HiddenFor(model => model.Operation)
+        @Html.HiddenFor(model => model.ChildCat)
+        
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.OutNumber, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.OutNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OutNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OutDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.OutDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClientId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.HiddenFor(model => model.ClientId)
+                <input class="form-control" value="@ViewBag.Client.Name" name="name_client" readonly />
+                <p>просит дать согласие на распоряжение имуществом</p>
+                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PortfolioId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.PortfolioId, (SelectList)@ViewBag.Portfolio, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PortfolioId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DuNumDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DuNumDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DuNumDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <hr />
+        <p><strong>в соответствии со следующими условиями:</strong></p>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RubricaOut, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @foreach (ListCODEResult item in ViewBag.RubricaOut)
+                {
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButton("RubricaOut", item.num, item.select, new { id = item.dop })
+                            @item.name
+                        </label>
+                    </div>
+                }
+                @Html.ValidationMessageFor(model => model.RubricaOut, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <h3>Кредитная организация</h3>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KoId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.KoId, (IEnumerable<SelectListItem>)@ViewBag.KoId, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FilialId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.FilialId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FilialId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h3>Имущество</h3>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ValueTypes, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.ValueTypes, (IEnumerable<SelectListItem>)@ViewBag.ValueTypes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ValueTypes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositSum, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositSum, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DepositSum, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositCurrency, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.DepositCurrency, (SelectList)@ViewBag.DepositCurrency, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DepositCurrency, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SettlementCurrency, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.SettlementCurrency, (SelectList)@ViewBag.DepositCurrency, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SettlementCurrency, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BalanceMin, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.BalanceMin, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BalanceMin, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <hr />
+        <p><strong>Иные существенные условия</strong></p>
+
+
+
+        <div class="form-group" id="DepositDogNum_hide">
+            @Html.LabelFor(model => model.DepositDogNum, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositDogNum, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DepositDogNum, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="DepositDogDate_hide">
+            @Html.LabelFor(model => model.DepositDogDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositDogDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.DepositDogDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContributionType, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.ContributionType, (SelectList)@ViewBag.ContributionType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ContributionType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositDogDateEnd, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositDogDateEnd, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DepositDogDateEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="DepositAccount_hide">
+            @Html.LabelFor(model => model.DepositAccount, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositAccount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DepositAccount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TransferDateEnd, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.TransferDateEnd, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.TransferDateEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContributionDogType, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.ContributionDogType, (SelectList)@ViewBag.ContributionDogType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ContributionDogType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="RateValue_hide">
+            @Html.LabelFor(model => model.RateValue, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.RateValue, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RateValue, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="PercentPeriods_hide">
+            @Html.LabelFor(model => model.PercentPeriods, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <div class="form-inline PercentPeriods">
+                    <div class="Percent_Period">
+                        <div class="form-group col-md-3">
+                            <input type="date" class="form-control form_daterangepicker" name="PercentPeriods[0].StartDate" placeholder="С">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input type="date" class="form-control form_daterangepicker" name="PercentPeriods[0].EndDate" placeholder="По">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input type="text" class="form-control" name="PercentPeriods[0].PercentRate" placeholder="Ставка">
+                        </div>
+                        <button type="button" class="btn btn-default Plus_PercentPeriods">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-default Minus_PercentPeriods">
+                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+
+                @*@Html.EditorFor(model => model.PercentPeriods, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.PercentPeriods, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PeriodPayment, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.PeriodPayment, (SelectList)@ViewBag.PeriodPayment, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PeriodPayment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PeriodsInterestDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.PeriodsInterestDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.PeriodsInterestDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositSubordinated, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositSubordinated, new { htmlAttributes = new { @class = "checkbox" } })
+                @Html.ValidationMessageFor(model => model.DepositSubordinated, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountReturn, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.AccountReturn, (IEnumerable<SelectListItem>)ViewBag.List, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AccountReturn, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KoAccountOpen, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.HiddenFor(model => model.KoAccountOpen, null)
+                <input class="form-control" value="" name="KoAccountOpenText" id="KoAccountOpenText" readonly />
+                @Html.ValidationMessageFor(model => model.KoAccountOpen, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExistenceContractConditions, htmlAttributes: new { @class = "control-label col-md-9" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.ExistenceContractConditions, new { htmlAttributes = new { @class = "checkbox" } })
+                @Html.ValidationMessageFor(model => model.ExistenceContractConditions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoExistenceContractConditions, htmlAttributes: new { @class = "control-label col-md-9" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.NoExistenceContractConditions, new { htmlAttributes = new { @class = "checkbox" } })
+                @Html.ValidationMessageFor(model => model.NoExistenceContractConditions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AuthorizedPersonFIO, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AuthorizedPersonFIO, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AuthorizedPersonFIO, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AuthorizedPersonPost, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AuthorizedPersonPost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AuthorizedPersonPost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <hr />
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <input type="submit" value="Сформировать" class="btn btn-default" />
+                @Html.ActionLink("Отмена", "Index", "Home", null, new { @class = "btn btn-default", role = "button" })
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    moment.locale('ru');
+    $('form').on('focus', '.form_daterangepicker', function () {
+        $(this).daterangepicker({
+            singleDatePicker: true,
+            format: 'DD/MM/YYYY'
+        });
+    });
+
+    $('#DepositDogNum_hide').hide();
+    $('#DepositDogDate_hide').hide();
+    $('#DepositAccount_hide').hide();
+
+    $('#DOP_AGREEMENT, #TERMINATION_DOG, #FRAMEWORK_CONTRACT').on('change', function () {
+        $('#DepositDogNum_hide').show();
+        $('#DepositDogDate_hide').show();
+        $('#DepositAccount_hide').show();
+    });
+    $('#DEPOSIT_DOG').on('change', function () {
+        $('#DepositDogNum_hide').hide();
+        $('#DepositDogNum').val("");
+        $('#DepositDogDate_hide').hide();
+        $('#DepositDogDate').val("");
+        $('#DepositAccount_hide').hide();
+        $('#DepositAccount').val("");
+    });
+
+
+    var myCombo1 = dhtmlXComboFromSelect("PortfolioId");
+    var myCombo2 = dhtmlXComboFromSelect("ValueTypes");
+    var myCombo3 = dhtmlXComboFromSelect("DepositCurrency");
+    var myCombo4 = dhtmlXComboFromSelect("SettlementCurrency");
+    var myCombo5 = dhtmlXComboFromSelect("ContributionType");
+    var myCombo6 = dhtmlXComboFromSelect("PeriodPayment");
+    var myCombo7 = dhtmlXComboFromSelect("KoId");
+    var myCombo8 = dhtmlXComboFromSelect("AccountReturn");
+    var myCombo9 = dhtmlXComboFromSelect("ContributionDogType");
+    var myCombo10 = dhtmlXComboFromSelect("FilialId");
+
+    myCombo1.readonly(true);
+    if (myCombo1.getSelectedValue() === "") {        
+        myCombo1.setComboValue(null);
+        myCombo1.setComboText("");
+        myCombo1.setPlaceholder("Выберите Портфель");
+    }
+    myCombo1.deleteOption("");
+
+    myCombo2.disable();
+    myCombo3.readonly(true);
+    myCombo4.readonly(true);
+    myCombo5.readonly(true);
+    myCombo6.readonly(true);
+    myCombo7.enableFilteringMode("between");
+
+    if (myCombo7.getSelectedValue() === "") {
+        myCombo7.setComboValue(null);
+        myCombo7.setComboText("");
+        myCombo7.setPlaceholder("БИК/Наименование кредитной организации");
+        myCombo10.disable();
+    }
+    else {
+        GetFilial(myCombo7.getSelectedValue());
+    }
+    myCombo7.deleteOption("");
+
+    myCombo8.enableFilteringMode("between");
+    myCombo8.setPlaceholder("Счет, на который осуществляется возврат суммы депозита");
+    if (myCombo1.getSelectedValue() === "") {
+        //myCombo8.setComboValue(null);
+        //myCombo8.setComboText("");
+        //myCombo8.setPlaceholder("Счет, на который осуществляется возврат суммы депозита");
+        myCombo8.disable();
+    }
+    else {
+        myCombo8.enable();
+    }
+    myCombo9.readonly(true);
+    myCombo10.setPlaceholder("Филиал");
+    myCombo10.readonly(true);
+
+    
+    $('#PercentPeriods_hide').hide();    
+    $('#RateValue_hide').show();
+
+    var _ddd = $('.Percent_Period');
+    _ddd.detach();
+    myCombo9.attachEvent("onChange", function (value, text) {
+        if (value == 1) {
+            $('#PercentPeriods_hide').hide();
+            $('#PercentPeriods_hide input').val("");
+            $('.Percent_Period').detach();
+            $('#RateValue_hide').show();
+        }
+        else {
+            $('#PercentPeriods_hide').show();
+            $('#RateValue_hide').hide();
+            _ddd.appendTo('.PercentPeriods');            
+        }
+    });
+    
+
+    myCombo3.attachEvent("onChange", function (value) {
+        myCombo4.setComboValue(value)
+    });
+
+    //var _get_select7 = myCombo7.getSelectedValue();
+    //var _get_select10 = myCombo10.getSelectedValue();
+    //if (_get_select7 != "" ) {
+    //    if (_get_select10 != "") {
+    //        myCombo10.enable();
+    //    }
+    //    else {
+    //        GetFilial(_get_select7);
+    //    }
+    //};
+
+    myCombo7.attachEvent("onChange", function (value) {
+        GetFilial(value);
+    });
+    
+    function GetFilial(value) {
+        var _val = myCombo10.getSelectedValue();
+        if (_val === "") {
+            myCombo10.clearAll();
+            myCombo10.setComboValue(null);
+            myCombo10.setComboText("");
+        }
+        if (value == null) {
+            myCombo10.disable();
+        } else {
+            myCombo10.enable();
+            $.ajax({
+                type: 'get',
+                async: false,
+                url: '/RequestDeposits/GetFilialId',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: {
+                    id: value
+                },
+                cache: false,
+                success: function (response) {
+                    myCombo10.addOption(response)
+                    myCombo10.setComboValue(_val);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //$('#DuNumDate').val("В Базе не найден Номер и Дата ДУ");
+                }
+            });
+            
+        }
+    };
+
+    
+
+    myCombo1.attachEvent("onChange", function (value, text) {
+        $.ajax({
+            type: 'get',
+            async: false,
+            url: '/RequestDeposits/GetNumDateDU',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            data: {
+                id: value
+            },
+            cache: false,
+            success: function (response) {
+                $('#DuNumDate').val(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#DuNumDate').val("В Базе не найден Номер и дата Правил ДУ");
+            }
+        });
+        $('#KoAccountOpen').val();
+        $('#KoAccountOpenText').val("");
+        myCombo8.clearAll();
+        myCombo8.setComboValue(null);
+        myCombo8.setComboText("");
+        if (value == null) {
+            myCombo8.disable();
+        } else {
+            myCombo8.enable();
+            $.ajax({
+                type: 'get',
+                async: false,
+                url: '/RequestDeposits/GetAccountReturn',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: {
+                    id: value
+                },
+                cache: false,
+                success: function (response) {
+                    myCombo8.addOption(response)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //$('#DuNumDate').val("В Базе не найден Номер и Дата ДУ");
+                }
+            });
+        }
+    });
+
+    myCombo8.attachEvent("onChange", function (value, text) {
+        $.ajax({
+            type: 'get',
+            async: false,
+            url: '/RequestDeposits/GetKoAccountOpen',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            data: {
+                id: value
+            },
+            cache: false,
+            success: function (response) {
+                $('#KoAccountOpen').val(response.value);
+                $('#KoAccountOpenText').val(response.text);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#KoAccountOpen').val();
+                $('#KoAccountOpenText').val("");
+            }
+        });
+    });
+
+    $('.PercentPeriods').on('click', '.Plus_PercentPeriods', function (e) {
+        e.preventDefault();
+        var _par = $(this).parent();
+        var _count = _par.parent().children().length;
+        _par.after('<div class="Percent_Period">'
+            + '<div class="form-group col-md-3">'
+            + '<input type="date" class="form-control form_daterangepicker" name="PercentPeriods[' + (_count) + '].StartDate" placeholder="С">'
+            + '</div>'
+            + '<div class="form-group col-md-3">'
+            + '<input type="date" class="form-control form_daterangepicker"name="PercentPeriods[' + (_count) + '].EndDate" placeholder="По">'
+            + '</div>'
+            + '<div class="form-group col-md-3">'
+            + '<input type="text" class="form-control"name="PercentPeriods[' + (_count) + '].PercentRate" placeholder="Ставка">'
+            + '</div>'
+            + '<button type="button" class="btn btn-default Plus_PercentPeriods">'
+            + '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>'
+            + '</button>'
+            + '<button type="button" class="btn btn-default Minus_PercentPeriods">'
+            + '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>'
+            + '</button>'
+            + '</div>');
+    });
+
+    $('.PercentPeriods').on('click', '.Minus_PercentPeriods', function (e) {
+        e.preventDefault();
+        var _par = $(this).parent();
+        _par.remove();
+    });
+
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

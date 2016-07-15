@@ -26,6 +26,14 @@ namespace major_call_wcf.wcf_major {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMajorService/XmlCompare", ReplyAction="http://tempuri.org/IMajorService/XmlCompareResponse")]
         System.IO.Stream XmlCompare(string sourceXmlFile, string changedXmlFile);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMajorService/GetCert", ReplyAction="http://tempuri.org/IMajorService/GetCertResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(string[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(byte[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Security.Cryptography.X509Certificates.StoreName))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(System.Security.Cryptography.X509Certificates.StoreLocation))]
+        object[] GetCert(System.Security.Cryptography.X509Certificates.StoreName StoreName, System.Security.Cryptography.X509Certificates.StoreLocation StoreLocation);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -69,6 +77,10 @@ namespace major_call_wcf.wcf_major {
         
         public System.IO.Stream XmlCompare(string sourceXmlFile, string changedXmlFile) {
             return base.Channel.XmlCompare(sourceXmlFile, changedXmlFile);
+        }
+        
+        public object[] GetCert(System.Security.Cryptography.X509Certificates.StoreName StoreName, System.Security.Cryptography.X509Certificates.StoreLocation StoreLocation) {
+            return base.Channel.GetCert(StoreName, StoreLocation);
         }
     }
 }

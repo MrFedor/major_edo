@@ -15,6 +15,41 @@
     {
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
+
+        public X509Certificate2Collection GetCert(StoreName StoreName, StoreLocation StoreLocation)
+        {
+            //
+            // StoreName
+            //
+            // AddressBook             Хранилище сертификатов X.509 для других пользователей.
+            // AuthRoot                Хранилище сертификатов X.509 для сторонних центров сертификации (ЦС).
+            // CertificateAuthority    Хранилище сертификатов X.509 для промежуточных центров сертификации.
+            // Disallowed              Хранилище сертификатов X.509 для отозванных сертификатов.
+            // My                      Хранилище сертификатов X.509 для личных сертификатов.
+            // Root                    Хранилище сертификатов X.509 для доверенного корневого центра сертификации.
+            // TrustedPeople           Хранилище сертификатов X.509 для непосредственно доверенных лиц и ресурсов.
+            // TrustedPublisher        Хранилище сертификатов X.509 для непосредственно доверенных издателей.
+
+
+            //
+            // StoreLocation
+            //
+            // CurrentUser              Хранилище сертификатов X.509 используется текущим пользователем.
+            // LocalMachine             Хранилище сертификатов X.509, назначенное локальному компьютеру.
+
+            X509Certificate2Collection collection = new X509Certificate2Collection();
+
+            // Открываем хранилище.
+            X509Store store = new X509Store(StoreName, StoreLocation);
+            store.Open(OpenFlags.ReadOnly);
+
+            collection = (X509Certificate2Collection)store.Certificates;
+
+            store.Close();
+
+            return collection;
+        }
+
         /// <summary>
         /// Открываем хранилище 'My' и ищем сертификат для подписи сообщения. Сертификат должен иметь поля Субъект (subject name) "TestGost".
         /// </summary>
@@ -266,18 +301,18 @@
             options |= XmlDiffOptions.IgnorePrefixes;
             //options |= XmlDiffOptions.IgnoreXmlDecl;
             options |= XmlDiffOptions.IgnoreDtd;
-                        
+
             MemoryStream diffgram = new MemoryStream();
             XmlTextWriter diffgramWriter = new XmlTextWriter(new StreamWriter(diffgram));
 
             MemoryStream memoryStream = new MemoryStream();
             TextWriter tw = new StreamWriter(memoryStream, Encoding.Unicode);
-            
+
             XmlDiff xmlDiff = new XmlDiff(options);
             bool bIdentical = xmlDiff.Compare(sourceXmlFile, changedXmlFile, bFragment, diffgramWriter);
-            
 
-            
+
+
             tw.WriteLine("<h3>XmlDiff view</h3><table border='0'><tr><td><table border='0'>");
             tw.WriteLine("<tr><th>" + sourceXmlFile + "</th><th>" + changedXmlFile + "</th></tr>" + "<tr><td colspan=2><hr size=1></td></tr>");
 
@@ -309,13 +344,13 @@
             sourceReader.XmlResolver = null;
             xmlDiffView.Load(sourceReader, new XmlTextReader(diffgram));
             xmlDiffView.GetHtml(tw);
-            
+
             tw.WriteLine("</table></table>");
 
 
             memoryStream.Seek(0, SeekOrigin.Begin);
             return memoryStream;
-            
+
         }
     }
 }

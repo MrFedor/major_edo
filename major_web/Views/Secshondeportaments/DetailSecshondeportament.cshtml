@@ -1,0 +1,67 @@
+﻿@model major_data.Models.Secshondeportament
+@using major_data.Models
+
+<h3>Информация</h3>
+@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+@Html.ActionLink("Details", "Details", new { id = Model.Id }) |
+@Html.ActionLink("Delete", "Delete", new { id = Model.Id })
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Подписант в отделе</div>
+    <div class="panel-body">
+        <div class="form-inline">
+            <div class="form-group">
+                <button type="button" class="btn btn-default" aria-label="trash">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default" aria-label="edit" id="CertEdit">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(model => model.Podpisant)
+                <input class="form-control" type="text" value="@ViewBag.Cert" placeholder="Подписант от ОСД" style="width:300px" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Пользователи</div>
+    <div class="panel-body">
+        <ul>
+            @foreach (var item in Model.AppUsers.ToList())
+            {
+                <li>@item.FirstName</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div id="modDialogCert" class="modal fade" tabindex="-1" role="dialog">
+    <div id="dialogContentCert" class="modal-dialog modal-lg"></div>
+</div>
+
+
+<script type="text/javascript">
+    $('#CertEdit').on('click', function () {
+        var mod = $(this);
+        var id_file = mod.data("id");
+        $.ajax({
+            async: false,
+            url: "/Home/Sverka/",
+            data: {
+                id: id
+            },
+            cache: false,
+            success: function (data) {
+                $('#dialogContentSverka').html(data);
+                $('#modDialogSverka').modal('show');
+            }
+        });
+    });
+</script>

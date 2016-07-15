@@ -1,5 +1,4 @@
-﻿using major_data;
-using major_data.Models;
+﻿using major_data.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,11 +7,16 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using major_data.IdentityModels;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using System.Web.UI.WebControls;
+using major_data;
+using client_data.Models;
+using client_data.ClientXmlViewsModels;
+using major_fansyspr;
 
 namespace major_web.Controllers
 {
@@ -23,51 +27,130 @@ namespace major_web.Controllers
         private static string folder_in = "Входящие";
         private string tmp_folder = @"\\server-edo\TEST\TEMP_CompareXML";
 
+        private ApplicationUserManager _userManager;
         private UserContext db = new UserContext();
+        private FansySprContext fansy_spr = new FansySprContext();
+
+        public HomeController()
+        {
+        }
+
+        public HomeController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         public ActionResult Index()
         {
-            string user = User.Identity.GetUserId();
-
-            //var store = new UserStore<ApplicationUser>(db);
-            //var userManager = new UserManager<ApplicationUser>(store);
-            //ApplicationUser _user = userManager.FindByNameAsync(User.Identity.Name).Result;
-
-            Department sdf = db.Department.Where(p => p.AppUsers.Where(n => n.Id == user).FirstOrDefault().Id == user).FirstOrDefault();
-            ViewBag.Deport = new SelectList(db.Department.ToList(), "Id", "Name", sdf.Id);
-
             return View();
         }
 
-        public ActionResult GetNavClient(int? deport)
+
+        //private IEnumerable<SelectListItem> GetDepartment(int? id)
+        //{
+        //    var _Departments = db.Department
+        //        .Select(x =>
+        //        new SelectListItem
+        //        {
+        //            Value = x.Id.ToString(),
+        //            Text = x.Name,
+        //            Selected = (x.Id == id)
+        //        }).AsEnumerable();
+
+        //    return _Departments;
+        //}
+
+        public async Task<ActionResult> NavClientDepartment()
         {
-            //
-            // Вывод SQL запроса в консоль Debug
-            //
-            //db.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));
+            ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            ViewBag.Department = new SelectList(db.Department, "Id", "Name", user.DepartmentId);
+            //ViewBag.Department = new SelectList(GetDepartment(user.DepartmentId), "Value", "Text", user.DepartmentId);
 
-            string user = User.Identity.GetUserId();
-            if (deport == null)
+            return PartialView("_NavClientDepartment");
+        }
+
+        public ActionResult GetNavClient(int? Department)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            if (Department == null)
             {
-                deport = db.Department.Where(p => p.AppUsers.Where(n => n.Id == user).FirstOrDefault().Id == user).FirstOrDefault().Id;
+                if (user.DepartmentId == null)
+                {
+                    Department = db.Department.First().Id;
+                }
+                else
+                {
+                    Department = user.DepartmentId;
+                }
             }
-
+            var _hhh = user.Permissions.Where(p => p.IsChecked == true && p.EnumpermissionName.Equals("Reading")).Select(u => u.SecshondeportamentId).ToList();
             var nav_client = db.RuleSystem
                 .Include("Fond")
                 .Include("Dogovor.Client")
-                .Where(p => p.RuleUsers.Where(n => n.AppUser.Id == user).FirstOrDefault().AppUser.Id == user && p.Department.Id == deport)
+                .Where(p => p.DepartmentId == Department && (_hhh.Contains(p.SecshondeportamentId) || p.RuleUsers.Where(n => n.AppUser.Id == user.Id).FirstOrDefault().AppUser.Id == user.Id))
                 .OrderBy(m => m.Fond.Name)
                 .AsEnumerable()
                 .OrderBy(n => n.Dogovor.Client.Name)
                 .GroupBy(m => m.Dogovor)
                 .ToList();
 
-            ViewBag.Deport = new SelectList(db.Department.ToList(), "Id", "Name", deport);
-
             return PartialView("_NavClient", nav_client);
         }
 
         public ActionResult FileList(int id_rule, bool file_in)
+        {
+            RuleSystem _rule = db.RuleSystem
+              .Include("Dogovor.Client")
+              .Include("Fond")
+              .Where(s => s.Id == id_rule)
+              .FirstOrDefault();
+
+
+            List<FileInSystem> _date = db.FileInSystem.Where(p => p.RuleSystem.Id == id_rule && p.RouteFile == file_in).OrderByDescending(u => u.OperDate).ToList();
+            List<SelectListItem> _resualt = new List<SelectListItem>();
+            if (_date.Count > 0)
+            {
+                DateTime _date_max = _date.Select(o => o.OperDate).Max();
+
+                _resualt = _date
+                    .Select(x =>
+                    new
+                    {
+                        text = x.OperDate
+                    }).ToList().Distinct()
+                    .Select(o =>
+                    new SelectListItem
+                    {
+                        Value = o.text.ToString("yyyy-MM-dd"),
+                        Text = o.text.ToString("yyyy-MM-dd"),
+                        Selected = (o.text == _date_max)
+                    }).ToList();
+            }
+
+            ViewBag.id_rule = id_rule;
+            ViewBag.chek = false;
+            ViewBag.file_in = file_in;
+            ViewBag.s_reportstatus = new SelectList(_resualt, "Value", "Text", "Selected");
+            ViewBag.client_fond_str = _rule.Fond != null ? _rule.Dogovor.Client.Name + " - " + _rule.Fond.Name : _rule.Dogovor.Client.Name;
+            ViewBag.first_start = false;
+
+            return PartialView("FileList");
+        }
+
+        public PartialViewResult FileListForm(int id_rule, bool file_in)
         {
             RuleSystem _rule = db.RuleSystem
               .Include("Dogovor.Client")
@@ -87,36 +170,14 @@ namespace major_web.Controllers
             ViewBag.file_in = file_in;
             ViewBag.s_reportstatus = new SelectList(ListDates);
             ViewBag.client_fond_str = _rule.Fond != null ? _rule.Dogovor.Client.Name + " - " + _rule.Fond.Name : _rule.Dogovor.Client.Name;
+            //ViewBag.first_start = false;
 
             return PartialView("FileList");
         }
 
-        //public PartialViewResult FileListForm(int id_rule, bool file_in, string name_file, string date_folder, string form_date_in_edo, bool id_checkbox)
-        //{
-        //    string user = User.Identity.GetUserId();
-            
-        //    List<string> ListDates = new List<string>();
-        //    var date_list = db.FileInSystem.Where(p => p.RuleSystem.Id == id_rule && p.RouteFile == file_in).OrderByDescending(u => u.OperDate).ToList().Select(k => k.OperDate).Distinct();
-        //    foreach (var item in date_list)
-        //    {
-        //        ListDates.Add(item.Date.ToString("yyyy-MM-dd"));
-        //    }            
-
-        //    ViewBag.id_rule = id_rule;
-        //    ViewBag.chek = id_checkbox;
-        //    ViewBag.file_in = file_in;
-        //    ViewBag.s_reportstatus = new SelectList(ListDates);
-
-        //    return PartialView("FileListForm");
-        //}
-        
-        public PartialViewResult SearchFiles(int id_rule, bool file_in, string name_file, string date_folder, string form_date_in_edo, bool? id_checkbox)
+        public ActionResult SearchFiles(int id_rule, bool file_in, string name_filelist, string date_folder, string form_date_in_edo, bool id_checkbox)
         {
-            string user = User.Identity.GetUserId();
-            if (id_checkbox == null)
-            {
-                id_checkbox = false;
-            }
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
             RuleSystem _rule = db.RuleSystem
                 .Include("Dogovor.Client")
                 .Include("Fond")
@@ -160,14 +221,66 @@ namespace major_web.Controllers
                     .ToList();
             }
 
-            if (!String.IsNullOrEmpty(name_file))
+            if (!String.IsNullOrEmpty(name_filelist))
             {
-                s_InfoFile = s_InfoFile.Where(s => s.Name.ToLower().Contains(name_file.ToLower())).OrderByDescending(v => v.DataCreate).ToList();
+                s_InfoFile = s_InfoFile.Where(s => s.Name.ToLower().Contains(name_filelist.ToLower())).OrderByDescending(v => v.DataCreate).ToList();
             }
 
+            string _per;
+
+            if (user.Permissions.Where(p => p.SecshondeportamentId == _rule.SecshondeportamentId && p.EnumpermissionName.Equals("Signature")).Select(u => u.IsChecked).FirstOrDefault() == true)
+            {
+                _per = "Signature";
+            }
+            else if (user.Permissions.Where(p => p.SecshondeportamentId == _rule.SecshondeportamentId && p.EnumpermissionName.Equals("ToSignature")).Select(u => u.IsChecked).FirstOrDefault() == true)
+            {
+                _per = "ToSignature";
+            }
+            else
+            {
+                _per = "Reading";
+            }
+
+
+
+            ViewBag.PermishonSignature = _per;
             ViewBag.file_in = file_in;
 
             return PartialView("Files", s_InfoFile);
+        }
+
+        [HttpGet]
+        public JsonResult GetDateList(int id_rule, bool file_in)
+        {
+            List<FileInSystem> _date = db.FileInSystem.Where(p => p.RuleSystem.Id == id_rule && p.RouteFile == file_in).OrderByDescending(u => u.OperDate).ToList();
+            List<ListJsonResult> _resualt = new List<ListJsonResult>();
+            if (_date.Count > 0)
+            {
+                DateTime _date_max = _date.Select(o => o.OperDate).Max();
+
+                _resualt = _date
+                    .Select(x =>
+                    new
+                    {
+                        text = x.OperDate
+                    }).ToList().Distinct()
+                    .Select(o =>
+                    new ListJsonResult
+                    {
+                        value = o.text.ToString("yyyy-MM-dd"),
+                        text = o.text.ToString("yyyy-MM-dd"),
+                        selected = (o.text == _date_max)
+                    }).ToList();
+            }
+
+            return Json(_resualt, JsonRequestBehavior.AllowGet);
+        }
+
+        public class ListJsonResult
+        {
+            public string value { get; internal set; }
+            public string text { get; internal set; }
+            public bool selected { get; internal set; }
         }
 
         public FileResult Download(int id, bool file_in)
@@ -194,53 +307,119 @@ namespace major_web.Controllers
                 .Include("CBInfo.TypeXML")
                 .Include("RuleSystem.Fond")
                 .Include("RuleSystem.Dogovor.Client")
+                .Include("RuleSystem.Secshondeportament")
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
+
+
+            ApplicationUser _podpisant = db.Certificate.Where(o => o.IsActive == true && o.AppUser.Id == _file.RuleSystem.Secshondeportament.Podpisant).Select(v => v.AppUser).FirstOrDefault();
+            if (_podpisant != null)
+            {
+                ViewBag.Podpisant = _podpisant.FirstName;
+                ViewBag.Podpisant_check = true;
+            }
+            else
+            {
+                ViewBag.Podpisant = "Не задан подписант для данного отдела";
+                ViewBag.Podpisant_check = false;
+            }
+
+
             return PartialView("_SignFile", _file);
         }
 
-        public PartialViewResult TaskListForm()
+        public ActionResult TaskListForm()
         {
-            string user = User.Identity.GetUserId();
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+            var _hhh = user.Permissions.Where(p => p.IsChecked == true && p.EnumpermissionName.Equals("Reading")).Select(u => u.SecshondeportamentId).ToList();
 
-            ViewBag.l_contragent = new SelectList(
-                db.RuleSystem
+            ViewBag.l_contragent = db.RuleSystem
                 .Include("Dogovor.Client")
-                .Where(p => p.RuleUsers.Where(n => n.AppUser.Id == user).FirstOrDefault().AppUser.Id == user)
-                .Select(m => m.Dogovor.Client.Name).Distinct().ToList()
-                );
-            ViewBag.l_fond = new SelectList(
-                db.RuleSystem
-                .Include("Fond")
-                .Where(p => p.RuleUsers.Where(n => n.AppUser.Id == user).FirstOrDefault().AppUser.Id == user && p.Fond != null)
-                .Select(m => m.Fond.Name).Distinct().ToList()
-                );
+                .Where(p => p.RuleUsers.Where(n => n.AppUserId == user.Id).FirstOrDefault().AppUser.Id == user.Id || _hhh.Contains(p.SecshondeportamentId))
+                .Select(x =>
+                new SelectListItem
+                {
+                    Value = x.Dogovor.Client.Id.ToString(),
+                    Text = x.Dogovor.Client.Name
+                }).Distinct().AsEnumerable();
+
+            ViewBag.l_fond = db.RuleSystem
+               .Include("Fond")
+               .Where(p => (p.RuleUsers.Where(n => n.AppUserId == user.Id).FirstOrDefault().AppUser.Id == user.Id) || _hhh.Contains(p.SecshondeportamentId) && p.Fond != null)
+               .Select(x =>
+                new SelectListItem
+                {
+                    Value = x.Fond.Id.ToString(),
+                    Text = x.Fond.Name
+                }).Distinct().AsEnumerable();
+
+
+
             ViewBag.l_type = new SelectList(db.TypeXML.Select(p => p.Xml_type).Distinct().ToList());
 
             return PartialView("TaskListForm");
         }
 
 
-        public PartialViewResult SearchTaskList(string name_file, string data_l_contragent, string data_l_fond, string date_in_edo, string data_l_type)
+        public ActionResult TaskList()
         {
-            string user = User.Identity.GetUserId();
+            //string user = User.Identity.GetUserId();
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+            var _hhh = user.Permissions.Where(p => p.IsChecked == true && p.EnumpermissionName.Equals("Reading")).Select(u => u.SecshondeportamentId).ToList();
+            DateTime date_ = DateTime.Now.Date;
+            var file_list = db.FileInSystem
+                .Include("RuleSystem.Dogovor.Client")
+                .Include("RuleSystem.Fond")
+                .Include("CBInfo.TypeXML")
+                .Where(m => (m.RuleSystem.RuleUsers.Where(n => n.AppUser.Id == user.Id).FirstOrDefault().AppUser.Id == user.Id ||
+                _hhh.Contains(m.RuleSystem.SecshondeportamentId)) &&
+                m.FileType == FileType.FileCB &&
+                m.RouteFile == true &&
+                (m.OperDate == date_ || (m.FileStatus != FileStatus.Podpisan && m.FileStatus != FileStatus.Close)))
+                .OrderByDescending(v => v.DataCreate).ToList();
+
+            Dictionary<int, string> _permis = new Dictionary<int, string>();
+            foreach (FileInSystem item in file_list)
+            {
+                if (user.Permissions.Where(p => p.SecshondeportamentId == item.RuleSystem.SecshondeportamentId && p.EnumpermissionName.Equals("Signature")).Select(u => u.IsChecked).FirstOrDefault() == true)
+                {
+                    _permis.Add(item.Id, "Signature");
+                }
+                else if (user.Permissions.Where(p => p.SecshondeportamentId == item.RuleSystem.SecshondeportamentId && p.EnumpermissionName.Equals("ToSignature")).Select(u => u.IsChecked).FirstOrDefault() == true)
+                {
+                    _permis.Add(item.Id, "ToSignature");
+                }
+                else
+                {
+                    _permis.Add(item.Id, "Reading");
+                }
+            }
+
+            ViewBag.PermishonSignature = _permis;
+
+            return PartialView("TaskList", file_list);
+        }
+
+        public PartialViewResult SearchTaskList(string name_file, int? data_l_contragent, int? data_l_fond, string date_in_edo, string data_l_type)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+            var _hhh = user.Permissions.Where(p => p.IsChecked == true && p.EnumpermissionName.Equals("Reading")).Select(u => u.SecshondeportamentId).ToList();
             DateTime date_ = DateTime.Now.Date;
             List<FileInSystem> file_task_list = new List<FileInSystem>();
-            if (!String.IsNullOrEmpty(name_file) 
-                || !String.IsNullOrEmpty(data_l_contragent) 
-                || !String.IsNullOrEmpty(data_l_fond) 
-                || !String.IsNullOrEmpty(date_in_edo) 
+            if (!String.IsNullOrEmpty(name_file)
+                || data_l_contragent != null
+                || data_l_fond != null
+                || !String.IsNullOrEmpty(date_in_edo)
                 || !String.IsNullOrEmpty(data_l_type))
             {
                 file_task_list = db.FileInSystem
                 .Include("RuleSystem.Dogovor.Client")
                 .Include("RuleSystem.Fond")
                 .Include("CBInfo.TypeXML")
-                .Where(
-                m => m.RuleSystem.RuleUsers.Where(n => n.AppUser.Id == user).FirstOrDefault().AppUser.Id == user &&
+                .Where(m => (m.RuleSystem.RuleUsers.Where(n => n.AppUserId == user.Id).FirstOrDefault().AppUserId == user.Id ||
+                _hhh.Contains(m.RuleSystem.SecshondeportamentId)) &&
                 m.FileType == FileType.FileCB &&
-                m.RouteFile == true
-                )
+                m.RouteFile == true)
                 .OrderByDescending(v => v.DataCreate).ToList();
             }
             else
@@ -249,16 +428,14 @@ namespace major_web.Controllers
                 .Include("RuleSystem.Dogovor.Client")
                 .Include("RuleSystem.Fond")
                 .Include("CBInfo.TypeXML")
-                .Where(
-                m => m.RuleSystem.RuleUsers.Where(n => n.AppUser.Id == user).FirstOrDefault().AppUser.Id == user &&
+                .Where(m => (m.RuleSystem.RuleUsers.Where(n => n.AppUserId == user.Id).FirstOrDefault().AppUserId == user.Id ||
+                _hhh.Contains(m.RuleSystem.SecshondeportamentId)) &&
                 m.FileType == FileType.FileCB &&
                 m.RouteFile == true &&
-                m.FileStatus != m_FileStatus.Podpisan &&
-                m.FileStatus != m_FileStatus.Close
-                )
+                m.FileStatus != FileStatus.Podpisan &&
+                m.FileStatus != FileStatus.Close)
                 .OrderByDescending(v => v.DataCreate).ToList();
             }
-            
             
 
             if (!String.IsNullOrEmpty(name_file))
@@ -266,14 +443,14 @@ namespace major_web.Controllers
                 file_task_list = file_task_list.Where(s => s.Name.ToLower().Contains(name_file.ToLower())).OrderByDescending(v => v.DataCreate).ToList();
             }
 
-            if (!String.IsNullOrEmpty(data_l_contragent))
+            if (data_l_contragent != null)
             {
-                file_task_list = file_task_list.Where(s => s.RuleSystem.Dogovor.Client.Name.ToLower().Contains(data_l_contragent.ToLower())).OrderByDescending(v => v.DataCreate).ToList();
+                file_task_list = file_task_list.Where(s => s.RuleSystem.Dogovor.Client.Id.Equals(data_l_contragent)).OrderByDescending(v => v.DataCreate).ToList();
             }
 
-            if (!String.IsNullOrEmpty(data_l_fond))
+            if (data_l_fond != null)
             {
-                file_task_list = file_task_list.Where(s => s.RuleSystem.Fond.Name.ToLower().Contains(data_l_fond.ToLower())).OrderByDescending(v => v.DataCreate).ToList();
+                file_task_list = file_task_list.Where(s => s.RuleSystem.Fond != null && s.RuleSystem.Fond.Id.Equals(data_l_fond)).OrderByDescending(v => v.DataCreate).ToList();
             }
 
             if (!String.IsNullOrEmpty(date_in_edo))
@@ -285,19 +462,29 @@ namespace major_web.Controllers
                 DateTime s_dateupload_do = DateTime.Parse(s_dateupload_do_temp, CultureInfo.CreateSpecificCulture("ru-RU")).AddDays(1);
                 file_task_list = file_task_list.Where(s => s.OperDate >= s_dateupload_ot && s.OperDate <= s_dateupload_do).OrderByDescending(v => v.DataCreate).ToList();
             }
+            Dictionary<int, string> _permis = new Dictionary<int, string>();
+            foreach (FileInSystem item in file_task_list)
+            {
+                if (user.Permissions.Where(p => p.SecshondeportamentId == item.RuleSystem.SecshondeportamentId && p.EnumpermissionName.Equals("Signature")).Select(u => u.IsChecked).FirstOrDefault() == true)
+                {
+                    _permis.Add(item.Id, "Signature");
+                }
+                else if (user.Permissions.Where(p => p.SecshondeportamentId == item.RuleSystem.SecshondeportamentId && p.EnumpermissionName.Equals("ToSignature")).Select(u => u.IsChecked).FirstOrDefault() == true)
+                {
+                    _permis.Add(item.Id, "ToSignature");
+                }
+                else
+                {
+                    _permis.Add(item.Id, "Reading");
+                }
+            }
 
-            //if (!String.IsNullOrEmpty(data_l_type))
-            //{
-            //    file_task_list = file_task_list.Where(s => s.Dogovor.Fond.Name.ToLower().Contains(data_l_fond.ToLower())).OrderByDescending(v => v.DataCreate).ToList();
-            //}
 
-
-            //ViewBag.l_contragent = new SelectList(db.m_Dogovor.Include("Contragent").Where(m => m.AppUsers.Select(k => k.Id).Contains(user)).Select(m => m.Contragent.Name).Distinct().ToList(), data_l_contragent);
-            //ViewBag.l_fond = new SelectList(db.m_Dogovor.Include("Fond").Where(m => m.AppUsers.Select(k => k.Id).Contains(user)).Select(m => m.Fond.Name).Distinct().ToList(), data_l_fond);
-            //ViewBag.l_type = new SelectList(db.m_TypeXML.Select(p => p.Xml_type).Distinct().ToList(), data_l_type);
+            ViewBag.PermishonSignature = _permis;
 
             return PartialView("TaskList", file_task_list);
         }
+
         public PartialViewResult InfoSig(int id)
         {
             FileInSystem file = db.FileInSystem.Include("CBInfo").Where(p => p.Id == id).FirstOrDefault();
@@ -305,26 +492,7 @@ namespace major_web.Controllers
 
             return PartialView("InfoSig", certs);
         }
-
-        public ActionResult TaskList()
-        {
-            string user = User.Identity.GetUserId();
-            DateTime date_ = DateTime.Now.Date;
-            var file_list = db.FileInSystem
-                .Include("RuleSystem.Dogovor.Client")
-                .Include("RuleSystem.Fond")
-                .Include("CBInfo.TypeXML")
-                .Where(
-                m => m.RuleSystem.RuleUsers.Where(n => n.AppUser.Id == user).FirstOrDefault().AppUser.Id == user &&
-                m.FileType == FileType.FileCB &&
-                m.RouteFile == true &&
-                (m.OperDate == date_ || (m.FileStatus != m_FileStatus.Podpisan && m.FileStatus != m_FileStatus.Close))
-                )
-                .OrderByDescending(v => v.DataCreate).ToList();
-            //ViewBag.file_in = true;
-            return PartialView("TaskList", file_list);
-        }
-
+        
         public ActionResult SendFile(int id)
         {
             string user = User.Identity.GetUserId();
@@ -366,8 +534,91 @@ namespace major_web.Controllers
             return PartialView("_CloseFile", _file);
         }
 
+        public ActionResult XMLSogl(int id_file, bool file_in)
+        {
+            var get_file = db.FileInSystem.Include("RuleSystem.Department").Where(p => p.Id == id_file && p.RouteFile == file_in).Single();
+            string full_path = "";
+
+            if (file_in)
+            {
+                full_path = System.IO.Path.Combine(get_file.RuleSystem.Path, folder_in, get_file.OperDate.ToString("yyyyMMdd"), get_file.Name);
+            }
+            else
+            {
+                full_path = System.IO.Path.Combine(get_file.RuleSystem.Path.Replace(get_file.RuleSystem.Department.NameFolderFoPath, folder_send + "\\" + get_file.RuleSystem.Department.NameFolderFoPath), get_file.OperDate.ToString("yyyyMMdd"), get_file.Name);
+            }
+
+            XmlSerializer serializer = new XmlSerializer(typeof(RequestDeposits));
+            RequestDeposits _RequestDeposit;
+            using (StreamReader reader = new StreamReader(full_path))
+            {
+                _RequestDeposit = (RequestDeposits)serializer.Deserialize(reader);
+            }
+            RequestSoglasieViewModels _req = new RequestSoglasieViewModels();
+            _req.OutNumber = _RequestDeposit.OutNumber;
+            _req.OutDate = _RequestDeposit.OutDate;
+            _req.DuNumDate = _RequestDeposit.DuNumDate;
+            _req.ClientId = fansy_spr.Client.Where(o => o.Fansy_ID == _RequestDeposit.ClientId).Select(o=>o.Name).FirstOrDefault();
+            _req.PortfolioId = fansy_spr.Dogovor.Where(o => o.Fansy_ID == _RequestDeposit.PortfolioId).Select(o => o.Name).FirstOrDefault();
+            _req.RubricaOut = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("RUBRICA_OUT")).Select(o => 
+            new RadioButton {
+                ID = o.NUM.ToString(),
+                Checked = (o.NUM == _RequestDeposit.RubricaOut),
+                Text = o.NAME,
+                
+            }).ToList();
+            _req.KoId = fansy_spr.Banks.Where(o => o.CLIENT_ID == _RequestDeposit.KoId).Select(o => o.BANKS_NAME).FirstOrDefault();
+            if (_RequestDeposit.FilialId != null)
+            {
+                _req.FilialId = fansy_spr.Banks.Where(o => o.CLIENT_ID == _RequestDeposit.FilialId).Select(o => o.BANKS_NAME).FirstOrDefault();
+            }
+            else
+            {
+                _req.FilialId = String.Empty;
+            }
+            
+            _req.ValueTypes = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("VALUE_TYPES") && r.NUM == _RequestDeposit.ValueTypes).Select(o => o.NAME).FirstOrDefault();
+            _req.DepositSum = _RequestDeposit.DepositSum;
+            _req.DepositCurrency = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("CURRENCY") && r.NUM == _RequestDeposit.DepositCurrency).Select(o => o.NAME).FirstOrDefault();
+            _req.SettlementCurrency = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("CURRENCY") && r.NUM == _RequestDeposit.SettlementCurrency).Select(o => o.NAME).FirstOrDefault();
+            _req.BalanceMin = _RequestDeposit.BalanceMin;
+            _req.DepositDogNum = _RequestDeposit.DepositDogNum;
+            _req.DepositDogDate = _RequestDeposit.DepositDogDate;
+            //_req.AgreementContractNum = _RequestDeposit.AgreementContractNum;
+            //_req.AgreementContractDate = _RequestDeposit.AgreementContractDate;
+            //_req.ChangesDogDate = _RequestDeposit.ChangesDogDate;
+            //_req.TerminationDogDate = _RequestDeposit.TerminationDogDate;
+            _req.ContributionType = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("PERCENT_TYPE") && r.NUM == _RequestDeposit.ContributionType).Select(o => o.NAME).FirstOrDefault();
+            _req.DepositDogDateEnd = _RequestDeposit.DepositDogDateEnd;
+            _req.DepositAccount = _RequestDeposit.DepositAccount;
+            _req.TransferDateEnd = _RequestDeposit.TransferDateEnd;
+            _req.ContributionDogType = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("D_SHARE_TYPE") && r.NUM == _RequestDeposit.ContributionDogType).Select(o => o.NAME).FirstOrDefault();
+            _req.RateValue = _RequestDeposit.RateValue;
+            //_req.PercentPeriods = new List<Models.PercentPeriods>();
+            //foreach (var item in _RequestDeposit.PercentPeriods)
+            //{
+            //    _req.PercentPeriods.Add(new Models.PercentPeriods { StartDate = item.StartDate, EndDate=item.EndDate, PercentRate = item.PercentRate });
+            //}
+            _req.PeriodPayment = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("PERCENT_MODE") && r.NUM == _RequestDeposit.PeriodPayment).Select(o => o.NAME).FirstOrDefault();
+            _req.PeriodsInterestDate = _RequestDeposit.PeriodsInterestDate;
+            _req.DepositSubordinated = _RequestDeposit.DepositSubordinated;
+            _req.AccountReturn = _RequestDeposit.AccountReturn;
+            _req.KoAccountOpen = fansy_spr.Banks.Where(o => o.CLIENT_ID == _RequestDeposit.KoAccountOpen).Select(o => o.BANKS_NAME).FirstOrDefault();
+            _req.ExistenceContractConditions = _RequestDeposit.ExistenceContractConditions;
+            _req.NoExistenceContractConditions = _RequestDeposit.NoExistenceContractConditions;
+            _req.AuthorizedPersonFIO = _RequestDeposit.AuthorizedPersonFIO;
+            _req.AuthorizedPersonPost = _RequestDeposit.AuthorizedPersonPost;            
+            _req.RequestStatus = db.FileRequst.Include("FileInSystem").Where(o=>o.FileInSystem.Id == id_file).Select(o=>o.RequestStatus).FirstOrDefault() == 0 ? true : false;
+            _req.RequestNum = db.FileRequst.Include("FileInSystem").Where(o => o.FileInSystem.Id == id_file).Select(o => o.RequestNum).FirstOrDefault();
+            _req.RequestDate = db.FileRequst.Include("FileInSystem").Where(o => o.FileInSystem.Id == id_file).Select(o => o.RequestDate).FirstOrDefault();
+            _req.RequestDescription = db.FileRequst.Include("FileInSystem").Where(o => o.FileInSystem.Id == id_file).Select(o => o.RequestDescription).FirstOrDefault();
+            _req.CommentCD = _RequestDeposit.CommentCD;
+
+
+            return PartialView("_XMLSogl", _req);
+        }
+
         [HttpPost]
-        //public ActionResult Upload(HttpPostedFileBase file, int? file_nash_out, int? file_client_in)
         public ContentResult Upload(int? file_nash_out, int? file_client_in)
         {
             string _file_nash_out_path = String.Empty;
@@ -480,10 +731,7 @@ namespace major_web.Controllers
 
             return Content(text);
         }
-
-
-
-
+        
         public MemoryStream RecursZip_stream(MemoryStream fullName)
         {
             MemoryStream mem = new MemoryStream();

@@ -8,6 +8,7 @@ using major_data.Models;
 using System.Data.Entity;
 using System.Globalization;
 using major_scan_folder;
+using major_data;
 
 namespace major_web.Hubs
 {
@@ -18,7 +19,7 @@ namespace major_web.Hubs
         public void FileOnTake(int id)
         {
             FileInSystem _FileInfo = db.FileInSystem.Find(id);
-            _FileInfo.FileStatus = m_FileStatus.NaPodpis;
+            _FileInfo.FileStatus = FileStatus.NaPodpis;
             db.Entry(_FileInfo).State = EntityState.Modified;
             db.SaveChanges();
             Clients.All.takeOnFile(id);
@@ -28,7 +29,7 @@ namespace major_web.Hubs
         {
             FileInSystem _FileInfo = db.FileInSystem.Include(p=>p.CBInfo).Where(p=>p.Id == id).FirstOrDefault();
             _FileInfo.CBInfo.Comment = msg;
-            _FileInfo.FileStatus = m_FileStatus.Close;
+            _FileInfo.FileStatus = FileStatus.Close;
             db.Entry(_FileInfo).State = EntityState.Modified;
             db.SaveChanges();
             int id_out = _FileInfo.Id;
@@ -38,7 +39,7 @@ namespace major_web.Hubs
         public void FileToSign(string user, int id)
         {
             FileInSystem _FileInfo = db.FileInSystem.Find(id);
-            _FileInfo.FileStatus = m_FileStatus.NaPodpis;
+            _FileInfo.FileStatus = FileStatus.NaPodpis;
             db.Entry(_FileInfo).State = EntityState.Modified;
             db.SaveChanges();
             Clients.All.toSignFile(id);
@@ -52,7 +53,7 @@ namespace major_web.Hubs
             FileInSystem _out_file = SignOut.AddSignOutFile(file, typeXML);
             if (_out_file != null)
             {
-                file.FileStatus = m_FileStatus.Podpisan;
+                file.FileStatus = FileStatus.Podpisan;
                 db.FileInSystem.Add(_out_file);
                 db.SaveChanges();
 
@@ -68,7 +69,7 @@ namespace major_web.Hubs
         public void FileReOpen(int id)
         {
             FileInSystem _FileInfo = db.FileInSystem.Find(id);
-            _FileInfo.FileStatus = m_FileStatus.ReOpen;
+            _FileInfo.FileStatus = FileStatus.ReOpen;
             db.Entry(_FileInfo).State = EntityState.Modified;
             db.SaveChanges();
             Clients.All.reOpenFile(id);

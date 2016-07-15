@@ -6,8 +6,6 @@ namespace major_data.IdentityModels
 
     public class ApplicationRole : IdentityRole
     {
-        public ApplicationRole() { }
-
         [Display(Name = "Описание роли")]
         public string Description { get; set; }
     }

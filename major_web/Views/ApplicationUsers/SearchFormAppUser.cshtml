@@ -1,0 +1,28 @@
+﻿<form class="form-inline">
+
+    <div class="form-group">
+        @Html.TextBox("FirstName", null, new { @class = "form-control", placeholder = "FirstName", @style = "width: 350px" })
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    $('#FirstName').on('keyup', function () {
+        //e.preventDefault();
+        var First_Name = $('input[name="FirstName"]').val();        
+
+        $.ajax({
+            async: false,
+            url: "/ApplicationUsers/SearchAppUser/",
+            data: {
+                FirstName: First_Name               
+            },
+            cache: false,
+            success: function (data) {
+                $('div#SearchAppUser').html(data);
+            }
+        });
+    });
+
+</script>

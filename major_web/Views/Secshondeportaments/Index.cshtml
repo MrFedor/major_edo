@@ -1,0 +1,51 @@
+﻿@model IEnumerable<major_data.Models.Secshondeportament>
+
+@{
+    ViewBag.Title = "Отделы";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Создать отдел", "Create")
+</p>
+
+
+<div class="row">
+    
+    <div class="col-md-4">
+        <h3>Отделы</h3>
+        <div class="list-group">
+            @foreach (var item in Model)
+            {
+                <button type="button" class="list-group-item DetailSecshondeportament" id="@item.Id">@item.Name</button>            
+            }
+        </div>
+    </div>
+    
+    <div id="DetailSecshondeportament" class="col-md-8">
+        <h3>Информация</h3>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $('.DetailSecshondeportament').on('click', function () {
+        var id = $(this).attr('id');        
+        $.ajax({
+            async: true,
+            url: "/Secshondeportaments/DetailSecshondeportament/",
+            data: {
+                id: id
+            },
+            cache: false,
+            beforeSend: function () {
+                $('div#DetailSecshondeportament').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
+            },
+            success: function (data) {
+                $('div#DetailSecshondeportament').html(data);                
+            }
+        });
+    });
+
+</script>

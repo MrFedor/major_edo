@@ -1,0 +1,153 @@
+﻿@model major_web.Models.EditViewModel
+@using major_data.Models
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ApplicationUser</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UserName)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ListDepartments, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Id_Department", Model.ListDepartments, "-- Нет Департамента --", htmlAttributes: new { @class = "form-control" })
+                @*@Html.DropDownListFor(model => model.Id_Department, Model.ListDepartments, htmlAttributes: new { @class = "form-control" })*@
+                @Html.ValidationMessageFor(model => model.ListDepartments, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ListSecshondeportaments, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.DropDownListFor(model => model.Id_Secshondeportament, Model.ListSecshondeportaments, htmlAttributes: new { @class = "form-control" })*@
+                @Html.DropDownList("Id_Secshondeportament", Model.ListSecshondeportaments, "-- Нет Отдела --", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ListSecshondeportaments, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Сертификаты</div>
+            <div class="panel-body">
+                @foreach (var item in Model.Certificates)
+                {
+                    <div class="radio">
+                        <label>
+                            @*<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>*@
+                            @Html.RadioButton("SelectedCertificate", item.SerialNumber, item.IsActive, new { id = item.Id })
+                            @item.SerialNumber
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Разрешения</div>
+            <div class="panel-body">
+                <div class="table">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Отдел</th>
+                                @foreach (Enumpermission item in ViewBag.Permission)
+                                {
+                                    <th>
+                                        @item.Description
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Secshondeportament item in ViewBag.SecDep)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    @foreach (Enumpermission items in ViewBag.Permission)
+                                    {
+                                        if (Model.Permissions.Where(o => o.EnumpermissionName == items.Name && o.SecshondeportamentId == item.Id).Select(p=>p.IsChecked).FirstOrDefault() == true)
+                                        {
+                                            <td>
+                                                <input type="checkbox" name="@items.Name" value="@item.Id" checked />
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <input type="checkbox" name="@items.Name" value="@item.Id" />
+                                            </td>
+                                        }
+
+                                    }
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    </div>
+                            @*@foreach (var item in Model.Certificates)
+                {
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                                        @Html.RadioButton("SelectedCertificate", item.SerialNumber, item.IsActive, new { id = item.Id })
+                                        @item.SerialNumber
+                                    </label>
+                                </div>
+                            }*@
+</div>
+            </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

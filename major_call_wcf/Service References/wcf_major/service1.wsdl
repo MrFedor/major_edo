@@ -6,6 +6,7 @@
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
       <xsd:import namespace="http://schemas.microsoft.com/Message" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System.Security.Cryptography.X509Certificates" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IMajorService_AddSign_InputMessage">
@@ -32,6 +33,12 @@
   <wsdl:message name="IMajorService_XmlCompare_OutputMessage">
     <wsdl:part name="parameters" element="tns:XmlCompareResponse" />
   </wsdl:message>
+  <wsdl:message name="IMajorService_GetCert_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCert" />
+  </wsdl:message>
+  <wsdl:message name="IMajorService_GetCert_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCertResponse" />
+  </wsdl:message>
   <wsdl:portType name="IMajorService">
     <wsdl:operation name="AddSign">
       <wsdl:input wsaw:Action="http://tempuri.org/IMajorService/AddSign" message="tns:IMajorService_AddSign_InputMessage" />
@@ -48,6 +55,10 @@
     <wsdl:operation name="XmlCompare">
       <wsdl:input wsaw:Action="http://tempuri.org/IMajorService/XmlCompare" message="tns:IMajorService_XmlCompare_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMajorService/XmlCompareResponse" message="tns:IMajorService_XmlCompare_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCert">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMajorService/GetCert" message="tns:IMajorService_GetCert_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMajorService/GetCertResponse" message="tns:IMajorService_GetCert_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IMajorService" type="tns:IMajorService">
@@ -81,6 +92,15 @@
     </wsdl:operation>
     <wsdl:operation name="XmlCompare">
       <soap:operation soapAction="http://tempuri.org/IMajorService/XmlCompare" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCert">
+      <soap:operation soapAction="http://tempuri.org/IMajorService/GetCert" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

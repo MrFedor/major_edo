@@ -86,6 +86,9 @@
     <None Include="Service References\wcf_major\service21.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\wcf_major\System.Security.Cryptography.X509Certificates.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -1,6 +1,7 @@
 ﻿namespace major_scan_folder
 {
     using Hangfire;
+    using major_data;
     using major_data.Models;
     using NLog;
     using System;
@@ -10,7 +11,6 @@
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
-    using System.Threading.Tasks;
     using System.Xml.Linq;
 
     public class SendReestrXtdd

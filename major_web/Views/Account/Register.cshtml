@@ -1,4 +1,5 @@
-﻿@model major_data.IdentityModels.RegisterViewModel
+﻿@model major_web.Models.RegisterViewModel
+
 @{
     ViewBag.Title = "Регистрация";
 }
@@ -11,6 +12,12 @@
     <h4>Создайте новую учетную запись.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        </div>
+    </div>
     <div class="form-group">
         @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">

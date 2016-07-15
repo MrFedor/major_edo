@@ -1,44 +1,27 @@
 ﻿@model List<IGrouping<Dogovor, RuleSystem>>
 @using major_data.Models
 
-
 @foreach (IGrouping<Dogovor, RuleSystem> item in Model)
 {
     <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingOne">            
-            <h4 class="panel-title">                
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
                 <a class="collapsed" aria-controls="collapseListGroup1" aria-expanded="false" href="#@item.Key.Id" data-toggle="collapse" role="button">
                     <strong>@item.Key.Client.Name</strong>
                 </a>
             </h4>
         </div>
         <div id="@item.Key.Id" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-            <div class="list-group">                
+            <div class="list-group">
                 @foreach (RuleSystem _fond in item)
                 {
                     if (_fond.Fond != null)
                     {
-                        @Ajax.ActionLink(_fond.Fond.Name.ToString(),
-                       "FileList",
-                       new { id_rule = _fond.Id, file_in = true },
-                       new AjaxOptions
-                       {
-                           UpdateTargetId = "Filelist",
-                           InsertionMode = InsertionMode.Replace,
-                       },
-                       new { @class = "list-group-item menu_link" })
+                        <button type="button" class="list-group-item menu_link" id="@_fond.Id" data-header="@item.Key.Client.Name - @_fond.Fond.Name.ToString()"><span class="badge"></span>@_fond.Fond.Name.ToString()</button>
                     }
                     else
                     {
-                        @Ajax.ActionLink(item.Key.Client.Name.ToString(),
-                       "FileList",
-                       new { id_rule = _fond.Id, file_in = true },
-                       new AjaxOptions
-                       {
-                           UpdateTargetId = "Filelist",
-                           InsertionMode = InsertionMode.Replace,
-                       },
-                       new { @class = "list-group-item menu_link" })
+                        <button type="button" class="list-group-item menu_link" id="@_fond.Id" data-header="@item.Key.Client.Name - @item.Key.Client.Name.ToString()"><span class="badge"></span>@item.Key.Client.Name.ToString()</button>
                     }
                 }
             </div>
@@ -48,25 +31,44 @@
 }
 
 <script type="text/javascript">
+    $('.menu_link').on('click', function () {
+        $('.menu_link').removeClass("active");
+        $(this).addClass("active");
+        if (true) {
 
-    var _href_old = "";
-    var a_active = $("a.menu_link")
-
-    a_active.on('click', function () {
-
-        _href = $(this).attr('href');
-
-        if (_href != _href_old && _href_old != "") {            
-            $("a.menu_link[href='" + _href_old + "']").removeClass("active");
-            _href_old = _href;
-            $(this).addClass("active");
         }
-        
-        if (_href_old == "") {
-            _href_old = _href;
-            $(this).addClass("active");
+        if (typeof myCombo3 != 'undefined') {
+            myCombo3.unload();
         }
-        
+
+
+        var id = $(this).attr('id');
+        var id_cell_b = "b";
+        var text_header = $(this).data('header');
+
+        myLayout.cells(id_cell_b).setText("Перечень Файлов: " + text_header);
+        myLayout.cells(id_cell_b).setCollapsedText("Перечень Файлов: " + text_header);
+        $.ajax({
+            async: true,
+            beforeSend: function () {
+                $('div#Filelist').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
+            },
+            url: "/Home/FileList/",
+            data: {
+                id_rule: id,
+                file_in: true,
+                id_checkbox: false
+            },
+            cache: false,
+            success: function (data) {
+                $('div#Filelist').html(data);
+                $('#file_list').height(function (value) {
+                    var h = myLayout.cells(id_cell_b).getHeight();
+                    return (h - 42 - 14 - $('#file_list_form').height());
+                });
+            }
+        });
     });
+
 
 </script>

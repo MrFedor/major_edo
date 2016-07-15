@@ -1,0 +1,178 @@
+﻿@model major_data.Models.RuleSystem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>RuleSystem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AssetType.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AssetType.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Department.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Department.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Dogovor.DogovorNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Dogovor.DogovorNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fond.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fond.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Secshondeportament.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Secshondeportament.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StopDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StopDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateLastFolder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateLastFolder)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Path)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Path)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecipEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContinueProcessRulez)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContinueProcessRulez)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileMask)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileMask)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GroupBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GroupBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaveDetachedSignature)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaveDetachedSignature)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaveFileWithSignature)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaveFileWithSignature)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaveInSubdirectory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaveInSubdirectory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UseRule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UseRule)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberRule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberRule)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

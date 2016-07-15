@@ -1,55 +1,71 @@
-﻿<div class="panel panel-primary">
-    <div class="panel-heading client_fond_str">Перечень Файлов:  @ViewBag.client_fond_str</div>
-    <div class="panel-body">
-        <div>
-            <div id="file_list_form">@{Html.RenderPartial("FileListForm");}</div>
-            <div id="file_list" style="height:500px; overflow-y: scroll;">@{Html.RenderAction("SearchFiles");}</div>
-        </div>        
-    </div>
-</div>
+﻿
 
+<div id="file_list_form">@{Html.RenderPartial("FileListForm");}</div>
+<div id="file_list">@{Html.RenderAction("SearchFiles");}</div>
 
-@*<script type="text/javascript">
+<script type="text/javascript">
+
+    var myCombo3 = dhtmlXComboFromSelect("date_folder");
+    myCombo3.readonly(true);
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" })
     });
 
+    myCombo3.attachEvent("onChange", function (value, text) {
+       
+        
+        var id_rule = $('input[name="id_rule"]').val();
+        var file_in = $('input[name="file_in"]').val();
+        var name_filelist = $('input[name="name_filelist"]').val();
+        var form_date_in_edo = $('input[name="form_date_in_edo"]').val();
+        
+
+        $.ajax({
+            async: true,
+            beforeSend: function () {
+                $('div#file_list').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
+            },
+            url: "/Home/SearchFiles/",
+            data: {
+                id_rule: id_rule,
+                file_in: file_in,
+                name_filelist: name_filelist,
+                id_checkbox: false,
+                form_date_in_edo: "",
+                date_folder: value
+            },
+            cache: false,
+            success: function (data) {
+                $('div#file_list').html(data);
+            }
+        });
+    });
+
     var chek = $('input[name="id_checkbox"]');
     if (chek.is(":checked")) {
-        $('#date_folder').hide();
+        //$('#date_folder').hide();
+        myCombo3.hide();
         $('#form_date_in_edo').show();
     }
     else {
-        $('#date_folder').show();
+        //$('#date_folder').show();
+        myCombo3.show();
         $('#form_date_in_edo').hide();
     }
 
     chek.on('change', function () {
         if (chek.is(":checked")) {
-            $('#date_folder').hide();
+            //$('#date_folder').hide();
+            myCombo3.hide();
             $('#form_date_in_edo').show();
         }
         else {
-            $('#date_folder').show();
+            //$('#date_folder').show();
+            myCombo3.show();
             $('#form_date_in_edo').hide();
         }
 
     });
 
-
-
-
-
-
-    moment.locale('ru');
-    $('input[name="form_date_in_edo"]').daterangepicker({
-        format: 'DD.MM.YYYY',
-        locale: {
-            applyLabel: 'Готово',
-            cancelLabel: 'Отмена',
-            fromLabel: 'С',
-            toLabel: 'Пo'
-        }
-    });
-</script>*@
+</script>
