@@ -9,7 +9,7 @@ namespace major_data.IdentityModels
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using System.ComponentModel.DataAnnotations.Schema;
     public class ApplicationUser : IdentityUser
     {   
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -28,6 +28,12 @@ namespace major_data.IdentityModels
 
         [Required]
         public DateTime JoinDate { get; set; }
+
+        [ForeignKey("Department")]
+        public int? DepartmentId { get; set; }
+
+        [ForeignKey("Secshondeportament")]
+        public int? SecshondeportamentId { get; set; }
 
         public virtual Department Department { get; set; }
         public virtual Secshondeportament Secshondeportament { get; set; }

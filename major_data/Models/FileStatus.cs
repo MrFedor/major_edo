@@ -1,12 +1,15 @@
 ﻿namespace major_data.Models
 {
-    public enum m_FileStatus : byte
+    public enum FileStatus : byte
     {
         Open,
         NaPodpis,
         Podpisan,
         ReOpen,
         Close,
-        Bad
+        Bad,
+        Soglasie,
+        Otkaz,
+        ErrorSoglasie
     }
 }

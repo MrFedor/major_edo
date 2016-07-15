@@ -2,13 +2,13 @@
 @using major_data.Models
 
 
-@if (Model.FileType != FileType.OtherFile && Model.RouteFile == true && User.IsInRole("Signature"))
+@if (Model.FileType == FileType.FileCB && Model.RouteFile == true && User.IsInRole("Signature"))
 {
 
     switch (Model.FileStatus)
     {
-        case m_FileStatus.Open:
-        case m_FileStatus.ReOpen:
+        case FileStatus.Open:
+        case FileStatus.ReOpen:
             <div class="nachalnik cb-open" data-id="@Model.Id">
                 <button data-id="@Model.Id" class="btn btn-primary btn-sm cb-open">Взять на себя</button>
             </div>
@@ -30,7 +30,7 @@
                 });
             </script>
             break;
-        case m_FileStatus.NaPodpis:
+        case FileStatus.NaPodpis:
             <div class="nachalnik cb-open" data-id="@Model.Id">
                 <button data-id="@Model.Id" class="btn btn-primary btn-sm cb-open">Взять на себя</button>
             </div>
@@ -52,20 +52,20 @@
                 });
             </script>
             break;
-        case m_FileStatus.Close:
+        case FileStatus.Close:
 
             break;
-        case m_FileStatus.Podpisan:
+        case FileStatus.Podpisan:
             { Html.RenderAction("SendFile", null, new { id = Model.Id }); }
             break;
     }
 }
-else if (Model.FileType != FileType.OtherFile && Model.RouteFile == true && User.IsInRole("Viewing"))
+else if (Model.FileType == FileType.FileCB && Model.RouteFile == true && User.IsInRole("Viewing"))
 {
     switch (Model.FileStatus)
     {
-        case m_FileStatus.Open:
-        case m_FileStatus.ReOpen:
+        case FileStatus.Open:
+        case FileStatus.ReOpen:
             <div class="manager cb-to-sign" data-id="@Model.Id">
                 <button type="button" class="btn btn-danger btn-sm cb-close" data-toggle="tooltip" data-placement="top" title="Закрыть" data-id="@Model.Id">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -86,7 +86,7 @@ else if (Model.FileType != FileType.OtherFile && Model.RouteFile == true && User
                         })
                     </script>
             break;
-        case m_FileStatus.NaPodpis:
+        case FileStatus.NaPodpis:
             <div class="manager cb-to-sign btn-group" role="group" data-id="@Model.Id">
                 <button type="button" class="btn btn-danger btn-sm cb-close" data-toggle="tooltip" data-placement="top" title="Закрыть" data-id="@Model.Id">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -107,10 +107,10 @@ else if (Model.FileType != FileType.OtherFile && Model.RouteFile == true && User
                         })
                     </script>
             break;
-        case m_FileStatus.Close:
+        case FileStatus.Close:
 
             break;
-        case m_FileStatus.Podpisan:
+        case FileStatus.Podpisan:
             { Html.RenderAction("SendFile", null, new { id = Model.Id }); }
             break;
     }

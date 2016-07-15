@@ -1,50 +1,96 @@
-﻿@using (Ajax.BeginForm("SearchTaskList", null, new AjaxOptions { UpdateTargetId = "file_task_list", InsertionMode = InsertionMode.Replace }, new { @class = "form-horizontal", @id = "form_searchtasklist", @name = "form_searchtasklist" }))
-{
+﻿
 
-    <div class="form-group">
-        <label for="name_file" class="col-sm-2 control-label">Имя файла</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" name="name_file" id="name_file" placeholder="Имя Файла">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="data_l_contragent" class="col-sm-2 control-label">Клиент</label>
-        <div class="col-sm-6">
-            <div class="input-prepend input-group">
-                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
-                @Html.DropDownList("data_l_contragent", (IEnumerable<SelectListItem>)ViewBag.l_contragent, "--- Все ---", new { @id = "data_l_contragent", @class = "form-control" })
+<div id="TaskList_layout">
+    <div id="file_task_list_form">
+        <div class="form-inline">
+            <div class="form-group">
+                @*<label for="name_file" class="control-label">Имя файла</label>*@
+                <input type="text" class="form-control" name="name_file" id="name_file" placeholder="Имя Файла" style = "width:300px">
             </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="data_l_fond" class="col-sm-2 control-label">Наименование фонда</label>
-        <div class="col-sm-6">
-            <div class="input-prepend input-group">
-                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
-                @Html.DropDownList("data_l_fond", (IEnumerable<SelectListItem>)ViewBag.l_fond, "--- Все ---", new { @id = "data_l_fond", @class = "form-control" })
-            </div>
-        </div>
-    </div>
-    <div class="form-group" id="date_in_edo">
-        <label for="date_in_edo" class="col-sm-2 control-label">Дата создания файла</label>
-        <div class="col-sm-6">
-            <div class="input-prepend input-group">
-                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-                @Html.TextBox("date_in_edo", null, new { @class = "form-control", placeholder = "Период получения документа" })
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="data_l_type" class="col-sm-2 control-label">Тип отчета</label>
-        <div class="col-sm-6">
-            <div class="input-prepend input-group">
-                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
-                @Html.DropDownList("data_l_type", (IEnumerable<SelectListItem>)ViewBag.l_type, "--- Все ---", new { @id = "data_l_type", @class = "form-control" })
-            </div>
-        </div>
-    </div>
-    <button class="btn btn-primary" type="submit" name="submit_button">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Выбрать
-    </button>
 
-}
+            <div class="form-group">
+                @*<label for="data_l_contragent" class="control-label">Клиент</label>*@
+                <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                    @Html.DropDownList("data_l_contragent", (IEnumerable<SelectListItem>)ViewBag.l_contragent, "", new { @id = "data_l_contragent", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*<label for="data_l_fond" class="control-label">Наименование фонда</label>*@
+                <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>
+                    @Html.DropDownList("data_l_fond", (IEnumerable<SelectListItem>)ViewBag.l_fond, "", new { @id = "data_l_fond", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group" id="date_in_edo">
+                @*<label for="date_in_edo" class="control-label">Дата создания файла</label>*@
+
+                <div class="input-prepend input-group">
+                    <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                    @Html.TextBox("date_in_edo", null, new { @class = "form-control form_daterangepicker", style = "width:225px", placeholder = "Период получения документа" })
+                </div>
+
+            </div>
+            @*<div class="form-group">
+                @*<label for="data_l_type" class="control-label">Тип отчета</label>*@
+            @*<div class="input-prepend input-group">*@
+            @* <span class="add-on input-group-addon"><i class="glyphicon glyphicon-th-list"></i></span>*@
+            @*@Html.DropDownList("data_l_type", (IEnumerable<SelectListItem>)ViewBag.l_type, "--- Все ---", new { @id = "data_l_type", @class = "form-control" })*@
+            @*</div> *@
+            @* </div>*@
+            <button class="btn btn-primary" type="submit" name="submit_button" id="FormSearchTaskList">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Выбрать
+            </button>
+        </div>
+    </div>
+    <div id="file_task_list">@{Html.RenderAction("TaskList");}</div>
+</div>
+
+
+<script type="text/javascript">
+
+    var myCombo1 = dhtmlXComboFromSelect("data_l_contragent");
+    var myCombo2 = dhtmlXComboFromSelect("data_l_fond");
+
+    myCombo1.setComboValue(null);
+    myCombo1.setComboText("");
+    myCombo1.setPlaceholder("Клиент");
+    myCombo1.enableFilteringMode("between");
+    myCombo1.deleteOption("");
+
+    myCombo2.setComboValue(null);
+    myCombo2.setComboText("");
+    myCombo2.setPlaceholder("Наименование фонда");
+    myCombo2.enableFilteringMode("between");
+    myCombo2.deleteOption("");
+
+    $('#FormSearchTaskList').on('click', function () {
+        //var id = $(this).attr('id');        
+        var name_file = $('input[name="name_file"]').val();
+        //var data_l_contragent = $('select[name="data_l_contragent"]').val();
+        //var data_l_fond = $('select[name="data_l_fond"]').val();
+        var data_l_contragent = myCombo1.getSelectedValue();        
+        var data_l_fond = myCombo2.getSelectedValue();
+        var date_in_edo = $('input[name="date_in_edo"]').val();
+        $.ajax({
+            async: true,
+            beforeSend: function () {
+                $('div#file_task_list').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
+            },
+            url: "/Home/SearchTaskList/",
+            data: {
+                name_file: name_file,
+                data_l_contragent: data_l_contragent,
+                data_l_fond: data_l_fond,
+                date_in_edo: date_in_edo
+            },
+            cache: false,
+            success: function (data) {
+                $('div#file_task_list').html(data);
+            }
+        });
+    });
+    
+
+</script>

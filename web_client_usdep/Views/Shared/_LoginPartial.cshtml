@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+    @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+
+            @if (User.IsInRole("Administrator"))
+            {
+                <li>
+                    @Html.ActionLink("Админка", "Index", "Admin", routeValues: null, htmlAttributes: new { title = "Admin" })
+                </li>                
+            }
+            @*<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Сформировать запрос <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Сформировать запрос", "Create", "RequestDeposits", routeValues: null, htmlAttributes: new { title = "Отчетность ЦБ" })</li>                    
+                </ul>
+            </li>*@
+
+                <li>
+                    @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                </li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
+            </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @*<li>@Html.ActionLink("Регистрация", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>*@
+        <li>@*@Html.ActionLink("Забыли пароль?", "ForgotPassword", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })*@</li>
+    </ul>
+}

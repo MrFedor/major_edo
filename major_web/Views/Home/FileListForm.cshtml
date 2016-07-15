@@ -1,77 +1,30 @@
 ﻿@{
-    string file_in_active = ViewBag.file_in ? "btn-primary" : "btn-default";
-    string file_out_active = ViewBag.file_in ? "btn-default" : "btn-primary";
-    bool id_checkbox = ViewBag.chek ? true : false;
+//string file_in_active = ViewBag.file_in ? "btn-primary" : "btn-default";
+//string file_out_active = ViewBag.file_in ? "btn-default" : "btn-primary";
+//bool id_checkbox = ViewBag.chek ? true : false;
 }
 <div class="form-inline">
-    @using (Ajax.BeginForm("SearchFiles", null, new AjaxOptions { UpdateTargetId = "file_list", InsertionMode = InsertionMode.Replace }, new { @name = "form_search_list" }))
-    {
-        @Html.Hidden("id_rule", ViewBag.id_rule as int?)
-        @Html.Hidden("file_in", ViewBag.file_in as bool?)
-        <div class="btn-group" role="group">
-            <button class="btn @file_in_active file_in_butt">
-                <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Входящие
-            </button>
-        </div>
-        <div class="btn-group" role="group">
-            <button class="btn @file_out_active file_out_butt">
-                <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Исходящие
-            </button>
-        </div>
-        <div class="form-group">
-            @Html.TextBox("name_file", null, new { @class = "form-control", placeholder = "Имя Файла", @style = "width: 350px" })
-        </div>
-        <div class="input-group">
-            <span class="input-group-addon">
-                @*<label for="id_checkbox">Период</label>*@
-                @Html.CheckBox("id_checkbox", id_checkbox, new { data_toggle = "tooltip", data_placement = "top", title = "Период" })
-            </span>
-            @Html.TextBox("form_date_in_edo", null, new { id = "form_date_in_edo", @class = "form-control", placeholder = "Период получения документа", @style = "width: 220px" })
-            @Html.DropDownList("date_folder", (IEnumerable<SelectListItem>)ViewBag.s_reportstatus, new { @id = "date_folder", @class = "form-control", @style = "width: 220px" })
-        </div>
-    }
+    @Html.Hidden("id_rule", ViewBag.id_rule as int?)
+    @Html.Hidden("file_in", ViewBag.file_in as bool?)
+    <div class="btn-group" role="group">
+        <button class="btn btn-primary file_in_butt">
+            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Входящие
+        </button>
     </div>
-    <script type="text/javascript">
-
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" })
-        });
-
-        var chek = $('input[name="id_checkbox"]');
-        if (chek.is(":checked")) {
-            $('#date_folder').hide();
-            $('#form_date_in_edo').show();
-        }
-        else {
-            $('#date_folder').show();
-            $('#form_date_in_edo').hide();
-        }
-
-        chek.on('change', function () {
-            if (chek.is(":checked")) {
-                $('#date_folder').hide();
-                $('#form_date_in_edo').show();
-            }
-            else {
-                $('#date_folder').show();
-                $('#form_date_in_edo').hide();
-            }
-
-        });
-
-
-
-
-
-
-        moment.locale('ru');
-        $('input[name="form_date_in_edo"]').daterangepicker({
-            format: 'DD.MM.YYYY',
-            locale: {
-                applyLabel: 'Готово',
-                cancelLabel: 'Отмена',
-                fromLabel: 'С',
-                toLabel: 'Пo'
-            }
-        });
-    </script>
+    <div class="btn-group" role="group">
+        <button class="btn btn-default file_out_butt">
+            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Исходящие
+        </button>
+    </div>
+    <div class="form-group">
+        @Html.TextBox("name_filelist", null, new { @class = "form-control", placeholder = "Имя Файла", @style = "width: 350px" })
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">
+            @*<label for="id_checkbox">Период</label>*@
+            @Html.CheckBox("id_checkbox", false, new { data_toggle = "tooltip", data_placement = "top", title = "Период" })
+        </span>
+        @Html.TextBox("form_date_in_edo", null, new { id = "form_date_in_edo", @class = "form-control form_daterangepicker", placeholder = "Период получения документа", @style = "width: 225px" })
+        @Html.DropDownList("date_folder", (SelectList)ViewBag.s_reportstatus, new { @id = "date_folder", @class = "form-control", @style = "width: 225px" })
+    </div>
+</div>

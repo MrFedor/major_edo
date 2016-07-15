@@ -1,12 +1,12 @@
-﻿using System;
-using Microsoft.Owin;
-using Owin;
-using Microsoft.Owin.Security.Cookies;
+﻿using Hangfire;
+using major_data;
+using major_data.IdentityModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using major_data.IdentityModels;
-using major_data.Models;
-using Hangfire;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
+using Owin;
+using System;
 using System.Web;
 
 namespace major_web

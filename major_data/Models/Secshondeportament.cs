@@ -14,9 +14,9 @@
         [Display(Name = "Подписант")]        
         public string Podpisant { get; set; }
 
+        public virtual SettingsDirectory SettingsDirectory { get; set; }
         public virtual ICollection<RuleSystem> RuleSystems { get; set; }
         public virtual ICollection<ApplicationUser> AppUsers { get; set; }
-        //public virtual ICollection<Permission> Permissions { get; set; }
-        
+
     }
 }

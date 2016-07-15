@@ -6,7 +6,7 @@
         <thead>
             <tr>
                 <th style="width:5%;"></th>
-                <th style="width:20%;">
+                <th style="width:250px;">
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
@@ -36,19 +36,19 @@
             @foreach (var item in Model)
             {
                 string tr_fon = "";
-                m_FileStatus type_file = item.FileStatus;
+                FileStatus type_file = item.FileStatus;
                 switch (type_file)
                 {
-                    case m_FileStatus.Close:
+                    case FileStatus.Close:
                         tr_fon = "danger";
                         break;
-                    case m_FileStatus.NaPodpis:
+                    case FileStatus.NaPodpis:
                         tr_fon = "active";
                         break;
-                    case m_FileStatus.ReOpen:
+                    case FileStatus.ReOpen:
                         tr_fon = "warning";
                         break;
-                    case m_FileStatus.Podpisan:
+                    case FileStatus.Podpisan:
                         tr_fon = "success";
                         break;
                 }
@@ -76,7 +76,7 @@
                             </div>
                         }
                     </td>
-                    <td>
+                    <td style="width:250px;">
                         @Html.ActionLink(item.Name, "Download", new { id = @item.Id, file_in = true }, null)
                     </td>
 
@@ -84,7 +84,11 @@
                         <p>@item.RuleSystem.Dogovor.Client.Name</p>
                     </td>
                     <td>
-                        <p>@item.RuleSystem.Fond.Name</p>
+                        @if (item.RuleSystem.Fond != null)
+                        {
+                            <p>@item.RuleSystem.Fond.Name</p>
+                        }
+                        
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DataCreate)
@@ -112,10 +116,18 @@
                         }
                     </td>
                     <td class="send_file_cb">
-                        @{Html.RenderPartial("_FileTypCB", item);}
+                        @if (ViewBag.PermishonSignature[item.Id] == "Signature")
+                        {
+                            Html.RenderPartial("_FileTypCBSignature", item);
+                        }
+                        else if (ViewBag.PermishonSignature[item.Id] == "ToSignature")
+                        {
+                            Html.RenderPartial("_FileTypCBToSignature", item);
+                        }
+
                     </td>
                 </tr>
-                            }
+            }
         </tbody>
     </table>
 </div>

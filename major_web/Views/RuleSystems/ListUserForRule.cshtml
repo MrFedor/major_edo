@@ -1,0 +1,93 @@
+﻿@model IEnumerable<major_data.IdentityModels.ApplicationUser>
+@using major_data.IdentityModels
+@using major_data.Models
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                Пользователь
+            </th>
+            <th>
+                Отдел
+            </th>
+            <th>
+                Оповещение
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ApplicationUser item in Model)
+        {
+            List<RuleUser> _rule_user = ViewBag.Check;
+            bool _check = _rule_user.Where(o=>o.AppUserId == item.Id).Select(o=>o.NotifFile).FirstOrDefault();
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs Minus_User" data-iduser="@item.Id" data-firstnameuser="@item.FirstName">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>                    
+                    @item.FirstName
+                </td>
+                <td>
+                    @if (item.Secshondeportament != null)
+                    {
+                        @item.Secshondeportament.Name
+                    }
+                </td>
+                <td>@Html.CheckBox("checkbox_rule", _check, new { @class= "checkbox_rule", data_iduser = item.Id, data_toggle = "tooltip", data_placement = "top", title = "Оповещение",  })</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $('button.Minus_User').on('click', function () {
+        var id = $('input[name="Id"]').val();
+        var id_user = $(this).data('iduser');
+        var firstname_user = $(this).data('firstnameuser');
+        $.ajax({
+            async: true,
+            beforeSend: function () {
+                $('div#divListUserForRule').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
+            },
+            url: "/RuleSystems/RemoveUser/",
+            data: {
+                id: id,
+                id_user: id_user
+            },
+            cache: false,
+            success: function (data) {
+                $('div#divListUserForRule').html(data);
+                myCombo6.addOption([[id_user, firstname_user]]);
+            }
+        });
+    });
+
+    $('.checkbox_rule').on('change', function () {
+        var id = $('input[name="Id"]').val();
+        var id_user = $(this).data('iduser');
+        var checkbox_rule = $('input[name="checkbox_rule"]').prop("checked");
+        $.ajax({
+            async: true,            
+            url: "/RuleSystems/UpdateUser/",
+            data: {
+                id: id,
+                id_user: id_user,
+                checkbox_rule: checkbox_rule
+            },
+            cache: false,
+            success: function (data) {
+                toastr.success(data);
+            },
+            error: function (jqxhr, status, errorMsg) {
+                toastr.warning("Статус: " + status + " Ошибка: " + errorMsg);
+            }
+        });
+    });
+
+</script>

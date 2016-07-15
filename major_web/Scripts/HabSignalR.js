@@ -44,7 +44,7 @@
     //
     // Подписать
     //
-    newFile.client.signFile = function (id, out_id, date_creat) {        
+    newFile.client.signFile = function (id, out_id, date_creat) {
         var tr_close = $("tr[data-id=" + id + "]");
         //Начальник
         $("div.cb-open[data-id=" + id + "]").hide();
@@ -54,10 +54,8 @@
         $("div.cb-return[data-id=" + id + "]").hide();
 
         $('#modDialogSignFile').modal('hide');
-        $("#unior")
         var msg = '<a href="/Home/Download/' + out_id + '?file_in=False">' + date_creat + '</a>';
         $("tr[data-id=" + id + "] .send_file_cb").append(msg);
-        var tr_close = $("tr[data-id=" + id + "]");
         tr_close.toggleClass("success", true);
 
     };
@@ -65,7 +63,7 @@
     //
     // Если не указан сертификат (нету подписанта) с нашей стороны
     //
-    newFile.client.notSignFile = function (id, str_comment_bad) {        
+    newFile.client.notSignFile = function (id, str_comment_bad) {
         $("button.cb-sign[data-id=" + id + "]").removeClass("disabled");
         $("button.cb-close[data-id=" + id + "]").removeClass("disabled");
         $("button.cb-return[data-id=" + id + "]").removeClass("disabled");
@@ -105,22 +103,21 @@
 
         //Закрыть
         $(document).on("click", "button.button_close_cb", function () {
-            var id_file = $('[name="Id"]').val();
+            var id_file = $(this).attr('id');
             var msg = $('[name="comment_close_cb"]').val();
             msg = $.trim(msg);
-            if (msg == "") {
+            if (msg === "") {
                 $('div.requeri_comment p').text("Укажите комментарий!");
             }
             else {
                 newFile.server.fileClose(id_file, msg);
             }
-            
         });
 
         //Подписать
         $(document).on("click", "button.button_sign_cb", function () {
             //var id_user = $("div#user_name").data("user");
-            var id_file = $('[name="Id"]').val();
+            var id_file = $(this).attr('id');
             //var $btn = $(this).button("Подписываем");
             //btn.addClass("disabled");
             //$("button.cb-close[data-id=" + id_file + "]").addClass("disabled");
@@ -140,4 +137,4 @@
     newFile.client.stopClient = function () {
         $.connection.hub.stop();
     };
-})
+});

@@ -1,0 +1,306 @@
+﻿@model client_data.Models.RequestDeposits
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>RequestDeposit</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OutNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OutDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DuNumDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DuNumDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClientId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PortfolioId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PortfolioId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RubricaOut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RubricaOut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KoId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KoId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FilialId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FilialId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ValueTypes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ValueTypes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositSum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositSum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositCurrency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositCurrency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SettlementCurrency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SettlementCurrency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BalanceMin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BalanceMin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositDogNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositDogNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositDogDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositDogDate)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.ContributionType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContributionType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositDogDateEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositDogDateEnd)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositAccount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositAccount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransferDateEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransferDateEnd)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContributionDogType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContributionDogType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RateValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RateValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PeriodPayment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PeriodPayment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PeriodsInterestDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PeriodsInterestDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DepositSubordinated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepositSubordinated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccountReturn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccountReturn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KoAccountOpen)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KoAccountOpen)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExistenceContractConditions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExistenceContractConditions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoExistenceContractConditions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoExistenceContractConditions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthorizedPersonFIO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AuthorizedPersonFIO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthorizedPersonPost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AuthorizedPersonPost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequestDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppUserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppUserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusObrobotki)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusObrobotki)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

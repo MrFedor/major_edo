@@ -1,0 +1,86 @@
+﻿
+<form class="form-inline">
+
+    <div class="form-group">
+        @Html.TextBox("AssetType", null, new { @class = "form-control", placeholder = "Вид Актива", @style = "width: 350px" })
+        @Html.TextBox("Department", null, new { @class = "form-control", placeholder = "Департамент", @style = "width: 350px" })
+        @Html.TextBox("Client", null, new { @class = "form-control", placeholder = "Клиент", @style = "width: 350px" })
+        @Html.TextBox("Fond", null, new { @class = "form-control", placeholder = "Наименование фонда", @style = "width: 350px" })
+        @Html.TextBox("Secshondeportament", null, new { @class = "form-control", placeholder = "Отдел", @style = "width: 350px" })
+        @Html.DropDownList("AddUserList", (SelectList)ViewBag.AddUserList, "-- Все пользователи --", new { @class = "form-control" })
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    var delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    var myCombo_AddUserList = dhtmlXComboFromSelect("AddUserList");    
+    //myCombo_AddUserList.setComboValue(null);
+    //myCombo_AddUserList.setComboText("");
+    //myCombo_AddUserList.setPlaceholder("Выберите Пользователя");
+    myCombo_AddUserList.enableFilteringMode("between");
+
+    $('#AssetType, #Department, #Client, #Fond, #Secshondeportament').on('keyup', function () {
+        delay(function () {
+            var AssetType = $('input[name="AssetType"]').val();
+            var Department = $('input[name="Department"]').val();
+            var Client = $('input[name="Client"]').val();
+            var Fond = $('input[name="Fond"]').val();
+            var Secshondeportament = $('input[name="Secshondeportament"]').val();
+            var id_user = myCombo_AddUserList.getSelectedValue();
+            //alert(id_user);
+            $.ajax({
+                async: true,
+                url: "/RuleSystems/SearchRuleSystems/",
+                data: {
+                    AssetType: AssetType,
+                    Department: Department,
+                    Client: Client,
+                    Fond: Fond,
+                    Secshondeportament: Secshondeportament,
+                    id_user: id_user
+                },
+                cache: false,
+                success: function (data) {
+                    $('div#SearchRuleSystems').html(data);
+                }
+            });
+        }, 1000);
+    });
+
+    myCombo_AddUserList.attachEvent("onChange", function (value, text) {
+        delay(function () {
+            var AssetType = $('input[name="AssetType"]').val();
+            var Department = $('input[name="Department"]').val();
+            var Client = $('input[name="Client"]').val();
+            var Fond = $('input[name="Fond"]').val();
+            var Secshondeportament = $('input[name="Secshondeportament"]').val();
+            var id_user = value;
+            $.ajax({
+                async: true,
+                url: "/RuleSystems/SearchRuleSystems/",
+                data: {
+                    AssetType: AssetType,
+                    Department: Department,
+                    Client: Client,
+                    Fond: Fond,
+                    Secshondeportament: Secshondeportament,
+                    id_user: id_user
+                },
+                cache: false,
+                success: function (data) {
+                    $('div#SearchRuleSystems').html(data);
+                }
+            });
+        }, 1000);
+    });
+
+</script>

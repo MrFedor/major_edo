@@ -1,6 +1,7 @@
 ﻿namespace major_scan_folder
 {
     using major_call_wcf;
+    using major_data;
     using major_data.Models;
     using NLog;
     using System;

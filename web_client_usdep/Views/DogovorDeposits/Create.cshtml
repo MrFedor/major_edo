@@ -1,0 +1,469 @@
+﻿@model client_data.Models.DogovorDeposits
+@using major_fansyspr
+
+@{
+    ViewBag.Title = "Карточка договора банковского вклада (депозита)";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm("Create", "DogovorDeposits"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.AppUserId)
+        @Html.HiddenFor(model => model.RequestId)
+        @Html.HiddenFor(model => model.Operation)
+        @Html.HiddenFor(model => model.ChildCat)
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OutNumber, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.OutNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OutNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OutDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.OutDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClientId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.HiddenFor(model => model.ClientId)
+                <input class="form-control" value="@ViewBag.Client.Name" name="name_client" readonly />
+                <p>просит дать согласие на распоряжение имуществом</p>
+                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PortfolioId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.PortfolioId, (SelectList)@ViewBag.Portfolio, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PortfolioId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DuNumDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DuNumDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DuNumDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <hr />
+        <p><strong>в соответствии со следующими условиями:</strong></p>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RubricaOut, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @foreach (ListCODEResult item in ViewBag.RubricaOut)
+                {
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButton("RubricaOut", item.num, item.select, new { id = item.dop, @disabled = "disabled" })
+                            @item.name
+                        </label>
+                    </div>
+                }
+                @Html.ValidationMessageFor(model => model.RubricaOut, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <h3>Кредитная организация</h3>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KoId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.KoId, (IEnumerable<SelectListItem>)ViewBag.KoId, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FilialId, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.FilialId, (IEnumerable<SelectListItem>)ViewBag.FilialId, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FilialId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h3>Имущество</h3>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ValueTypes, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.ValueTypes, (IEnumerable<SelectListItem>)@ViewBag.ValueTypes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ValueTypes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositSum, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositSum, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DepositSum, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositCurrency, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.DepositCurrency, (SelectList)@ViewBag.DepositCurrency, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DepositCurrency, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SettlementCurrency, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.SettlementCurrency, (SelectList)@ViewBag.SettlementCurrency, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SettlementCurrency, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BalanceMin, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.BalanceMin, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.BalanceMin, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <hr />
+        <p><strong>Иные существенные условия</strong></p>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositDogNum, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositDogNum, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DepositDogNum, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositDogDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositDogDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DepositDogDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="form-group" id="AgreementContractNum_hide">
+            @Html.LabelFor(model => model.AgreementContractNum, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AgreementContractNum, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AgreementContractNum, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="AgreementContractDate_hide">
+            @Html.LabelFor(model => model.AgreementContractDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AgreementContractDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.AgreementContractDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ChangesDogDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.ChangesDogDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.ChangesDogDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TerminationDogDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.TerminationDogDate, new { htmlAttributes = new { @class = "form-control form_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.TerminationDogDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContributionType, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.ContributionType, (SelectList)@ViewBag.ContributionType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ContributionType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositDogDateEnd, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositDogDateEnd, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DepositDogDateEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositAccount, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositAccount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DepositAccount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TransferDateEnd, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.TransferDateEnd, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.TransferDateEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContributionDogType, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.ContributionDogType, (SelectList)@ViewBag.ContributionDogType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ContributionDogType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RateValue, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.RateValue, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.RateValue, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (Model.PercentPeriods != null)
+        {
+            int i = 0;
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PercentPeriods, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    <div class="form-inline PercentPeriods">
+                        @foreach (var item in Model.PercentPeriods)
+                        {
+                            <div>
+                                <div class="form-group col-md-3">
+                                    <input type="date" class="form-control" name="PercentPeriods[@i].StartDate" placeholder="С" value="@item.StartDate.Date.ToString("dd'/'MM'/'yyyy")" readonly>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input type="date" class="form-control" name="PercentPeriods[@i].EndDate" placeholder="По" value="@item.EndDate.Date.ToString("dd'/'MM'/'yyyy")" readonly>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input type="text" class="form-control" name="PercentPeriods[@i].PercentRate" placeholder="Ставка" value="@item.PercentRate" readonly>
+                                </div>
+                                <button type="button" class="btn btn-default Plus_PercentPeriods" disabled>
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-default Minus_PercentPeriods" disabled>
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                            i++;
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PercentPeriods, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PeriodPayment, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.PeriodPayment, (SelectList)@ViewBag.PeriodPayment, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PeriodPayment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PeriodsInterestDate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.PeriodsInterestDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.PeriodsInterestDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepositSubordinated, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DepositSubordinated, new { htmlAttributes = new { @class = "checkbox", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.DepositSubordinated, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountReturn, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(model => model.AccountReturn, (SelectList)@ViewBag.AccountReturn, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AccountReturn, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KoAccountOpen, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.HiddenFor(model => model.KoAccountOpen, null)
+                <input class="form-control" value="@ViewBag.KoAccountOpen" name="KoAccountOpenText" id="KoAccountOpenText" readonly />
+                @Html.ValidationMessageFor(model => model.KoAccountOpen, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExistenceContractConditions, htmlAttributes: new { @class = "control-label col-md-9" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.ExistenceContractConditions, new { htmlAttributes = new { @class = "checkbox", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.ExistenceContractConditions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoExistenceContractConditions, htmlAttributes: new { @class = "control-label col-md-9" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.NoExistenceContractConditions, new { htmlAttributes = new { @class = "checkbox", @disabled = "disabled" } })
+                @Html.ValidationMessageFor(model => model.NoExistenceContractConditions, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AuthorizedPersonFIO, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AuthorizedPersonFIO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.AuthorizedPersonFIO, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AuthorizedPersonPost, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AuthorizedPersonPost, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.AuthorizedPersonPost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DocumentCollections, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <input type="file" name="upload" />
+                @*@Html.ValidationMessageFor(model => model.AuthorizedPersonPost, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Сформировать" class="btn btn-default" />
+                @Html.ActionLink("Отмена", "Index", "Home", null, new { @class = "btn btn-default", role = "button" })
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    moment.locale('ru');
+
+    $('form').on('focus', '.form_daterangepicker', function () {
+        $(this).daterangepicker({
+            singleDatePicker: true,
+            format: 'DD/MM/YYYY'
+        });
+    });
+
+
+
+    if ($('#DEPOSIT_DOG, #TERMINATION_DOG, #CONFIRM_TRANSFER, #FRAMEWORK_CONTRACT').is(':checked')) {
+        $('#AgreementContractNum_hide').detach();
+        $('#AgreementContractDate_hide').detach();
+    }
+
+    //var myVault = new dhtmlXVaultObject({
+    //    container: "vaultObj",             // html container for vault
+    //    uploadUrl: "server.php",           // html4/html5 upload url
+    //    swfPath: "dhxvault.swf",         // path to flash uploader
+    //    swfUrl: "server.php",           // flash upload url
+    //    slXap: "dhxvault.xap",         // path to silverlight uploader
+    //    slUrl: "http://.../server.php" // silverlight upload url, FULL path required
+    //});
+    //$(".form_daterangepicker").daterangepicker({
+    //    singleDatePicker: true,
+    //    format: 'DD/MM/YYYY'
+    //});
+
+
+
+
+
+    var myCombo1 = dhtmlXComboFromSelect("PortfolioId");
+    var myCombo2 = dhtmlXComboFromSelect("ValueTypes");
+    var myCombo3 = dhtmlXComboFromSelect("DepositCurrency");
+    var myCombo4 = dhtmlXComboFromSelect("SettlementCurrency");
+    var myCombo5 = dhtmlXComboFromSelect("ContributionType");
+    var myCombo6 = dhtmlXComboFromSelect("PeriodPayment");
+    var myCombo7 = dhtmlXComboFromSelect("KoId");
+    var myCombo8 = dhtmlXComboFromSelect("AccountReturn");
+    var myCombo9 = dhtmlXComboFromSelect("ContributionDogType");
+    var myCombo10 = dhtmlXComboFromSelect("FilialId");
+    myCombo1.disable();
+    myCombo2.disable();
+    myCombo3.disable();
+    myCombo4.disable();
+    myCombo5.disable();
+    myCombo6.disable();
+    myCombo7.disable();
+    myCombo8.disable();
+    myCombo9.disable();
+    myCombo10.disable();
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

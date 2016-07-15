@@ -20,6 +20,10 @@ namespace major_web
             bundles.Add(new ScriptBundle("~/bundles/sitejs").Include(
                         "~/Scripts/sitejs.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/dhtmlxcombo").Include(
+                        "~/Scripts/dhtmlxcombo.js",
+                        "~/Scripts/dhtmlxlayout.js"));
+
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
             // используйте средство сборки на сайте http://modernizr.com, чтобы выбрать только нужные тесты.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -32,12 +36,17 @@ namespace major_web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/daterangepicker-bs3.css"));
+                      "~/Content/daterangepicker.css",
+                      "~/Content/dhtmlxcombo.css",
+                      "~/Content/dhtmlxlayout.css",
+                      "~/Content/toastr.min.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/daterangepicker").Include(
                       "~/Scripts/moment.min.js",
                       "~/Scripts/moment-with-locales.min.js",
-                      "~/Scripts/daterangepicker.js"));
+                      "~/Scripts/daterangepicker.js",
+                      "~/Scripts/toastr.min.js"
+                      ));
         }
     }
 }

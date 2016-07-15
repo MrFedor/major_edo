@@ -80,8 +80,8 @@
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -92,24 +92,23 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="X.PagedList, Version=1.24.1.31653, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\X.PagedList.1.24.1.320\lib\net451\X.PagedList.dll</HintPath>
+    <Reference Include="X.PagedList, Version=5.1.0.33787, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\X.PagedList.5.1.0.5000\lib\portable-net45+wp8+win8\X.PagedList.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdentityModels\AccountViewModels.cs" />
     <Compile Include="IdentityModels\ApplicationRole.cs" />
     <Compile Include="IdentityModels\ApplicationRoleManager.cs" />
     <Compile Include="IdentityModels\ApplicationUser.cs" />
     <Compile Include="IdentityModels\ApplicationUserManager.cs" />
-    <Compile Include="IdentityModels\ManageViewModels.cs" />
     <Compile Include="Migrations\201606010657291_20160601-0.cs" />
     <Compile Include="Migrations\201606010657291_20160601-0.Designer.cs">
       <DependentUpon>201606010657291_20160601-0.cs</DependentUpon>
@@ -138,12 +137,101 @@
     <Compile Include="Migrations\201606171758496_20160617-0.Designer.cs">
       <DependentUpon>201606171758496_20160617-0.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606181256534_20160618-0.cs" />
+    <Compile Include="Migrations\201606181256534_20160618-0.Designer.cs">
+      <DependentUpon>201606181256534_20160618-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606181408079_20160618-1.cs" />
+    <Compile Include="Migrations\201606181408079_20160618-1.Designer.cs">
+      <DependentUpon>201606181408079_20160618-1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606181435356_20160618-2.cs" />
+    <Compile Include="Migrations\201606181435356_20160618-2.Designer.cs">
+      <DependentUpon>201606181435356_20160618-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606181558279_20160618-3.cs" />
+    <Compile Include="Migrations\201606181558279_20160618-3.Designer.cs">
+      <DependentUpon>201606181558279_20160618-3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606181658470_20160618-4.cs" />
+    <Compile Include="Migrations\201606181658470_20160618-4.Designer.cs">
+      <DependentUpon>201606181658470_20160618-4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606200604443_20160620-0.cs" />
+    <Compile Include="Migrations\201606200604443_20160620-0.Designer.cs">
+      <DependentUpon>201606200604443_20160620-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606200833135_20160620-1.cs" />
+    <Compile Include="Migrations\201606200833135_20160620-1.Designer.cs">
+      <DependentUpon>201606200833135_20160620-1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606201633360_20160620-2.cs" />
+    <Compile Include="Migrations\201606201633360_20160620-2.Designer.cs">
+      <DependentUpon>201606201633360_20160620-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606201716517_20160620-3.cs" />
+    <Compile Include="Migrations\201606201716517_20160620-3.Designer.cs">
+      <DependentUpon>201606201716517_20160620-3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606221035475_20160622-0.cs" />
+    <Compile Include="Migrations\201606221035475_20160622-0.Designer.cs">
+      <DependentUpon>201606221035475_20160622-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606221039395_20160622-1.cs" />
+    <Compile Include="Migrations\201606221039395_20160622-1.Designer.cs">
+      <DependentUpon>201606221039395_20160622-1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606221040466_20160622-2.cs" />
+    <Compile Include="Migrations\201606221040466_20160622-2.Designer.cs">
+      <DependentUpon>201606221040466_20160622-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606221047148_20160622-3.cs" />
+    <Compile Include="Migrations\201606221047148_20160622-3.Designer.cs">
+      <DependentUpon>201606221047148_20160622-3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606230619431_20160623-0.cs" />
+    <Compile Include="Migrations\201606230619431_20160623-0.Designer.cs">
+      <DependentUpon>201606230619431_20160623-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606280920571_20160628-0.cs" />
+    <Compile Include="Migrations\201606280920571_20160628-0.Designer.cs">
+      <DependentUpon>201606280920571_20160628-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606300849165_20160630-0.cs" />
+    <Compile Include="Migrations\201606300849165_20160630-0.Designer.cs">
+      <DependentUpon>201606300849165_20160630-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606300901322_20160630-1.cs" />
+    <Compile Include="Migrations\201606300901322_20160630-1.Designer.cs">
+      <DependentUpon>201606300901322_20160630-1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606301131339_20160630-2.cs" />
+    <Compile Include="Migrations\201606301131339_20160630-2.Designer.cs">
+      <DependentUpon>201606301131339_20160630-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606301203431_20160630-3.cs" />
+    <Compile Include="Migrations\201606301203431_20160630-3.Designer.cs">
+      <DependentUpon>201606301203431_20160630-3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607071728008_20160707-0.cs" />
+    <Compile Include="Migrations\201607071728008_20160707-0.Designer.cs">
+      <DependentUpon>201607071728008_20160707-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607080605387_20160708-0.cs" />
+    <Compile Include="Migrations\201607080605387_20160708-0.Designer.cs">
+      <DependentUpon>201607080605387_20160708-0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607120711224_20160712-0.cs" />
+    <Compile Include="Migrations\201607120711224_20160712-0.Designer.cs">
+      <DependentUpon>201607120711224_20160712-0.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\AssetType.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ClientEmail.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Dogovor.cs" />
     <Compile Include="Models\Enumpermission.cs" />
+    <Compile Include="Models\FileRequst.cs" />
     <Compile Include="Models\Fond.cs" />
     <Compile Include="Models\CBCert.cs" />
     <Compile Include="Models\Certificate.cs" />
@@ -152,12 +240,13 @@
     <Compile Include="Models\FileStatus.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\Secshondeportament.cs" />
+    <Compile Include="Models\SettingsDirectory.cs" />
     <Compile Include="Models\TypeXML.cs" />
     <Compile Include="Models\RuleUser.cs" />
     <Compile Include="Models\RuleSystem.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FileInSystem.cs" />
-    <Compile Include="Models\UserContext.cs" />
+    <Compile Include="UserContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +277,72 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606171758496_20160617-0.resx">
       <DependentUpon>201606171758496_20160617-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606181256534_20160618-0.resx">
+      <DependentUpon>201606181256534_20160618-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606181408079_20160618-1.resx">
+      <DependentUpon>201606181408079_20160618-1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606181435356_20160618-2.resx">
+      <DependentUpon>201606181435356_20160618-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606181558279_20160618-3.resx">
+      <DependentUpon>201606181558279_20160618-3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606181658470_20160618-4.resx">
+      <DependentUpon>201606181658470_20160618-4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606200604443_20160620-0.resx">
+      <DependentUpon>201606200604443_20160620-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606200833135_20160620-1.resx">
+      <DependentUpon>201606200833135_20160620-1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606201633360_20160620-2.resx">
+      <DependentUpon>201606201633360_20160620-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606201716517_20160620-3.resx">
+      <DependentUpon>201606201716517_20160620-3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606221035475_20160622-0.resx">
+      <DependentUpon>201606221035475_20160622-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606221039395_20160622-1.resx">
+      <DependentUpon>201606221039395_20160622-1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606221040466_20160622-2.resx">
+      <DependentUpon>201606221040466_20160622-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606221047148_20160622-3.resx">
+      <DependentUpon>201606221047148_20160622-3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606230619431_20160623-0.resx">
+      <DependentUpon>201606230619431_20160623-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606280920571_20160628-0.resx">
+      <DependentUpon>201606280920571_20160628-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606300849165_20160630-0.resx">
+      <DependentUpon>201606300849165_20160630-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606300901322_20160630-1.resx">
+      <DependentUpon>201606300901322_20160630-1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606301131339_20160630-2.resx">
+      <DependentUpon>201606301131339_20160630-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606301203431_20160630-3.resx">
+      <DependentUpon>201606301203431_20160630-3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607071728008_20160707-0.resx">
+      <DependentUpon>201607071728008_20160707-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607080605387_20160708-0.resx">
+      <DependentUpon>201607080605387_20160708-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607120711224_20160712-0.resx">
+      <DependentUpon>201607120711224_20160712-0.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

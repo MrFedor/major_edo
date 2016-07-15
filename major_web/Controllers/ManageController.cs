@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using major_data.IdentityModels;
+using major_web.Models;
 
 namespace major_web.Controllers
 {

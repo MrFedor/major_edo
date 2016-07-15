@@ -1,0 +1,282 @@
+﻿@model major_data.Models.RuleSystem
+@using major_data.IdentityModels
+
+@{
+    ViewBag.Title = "Редактор правила";
+}
+
+<h2>Edit</h2>
+
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>RuleSystem</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Сохраниеть" class="btn btn-default" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control singl_daterangepicker" } })
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StopDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StopDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StopDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateLastFolder, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateLastFolder, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.DateLastFolder, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Path, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Path, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Path, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DogovorId, "DogovorId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("DogovorId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DogovorId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FondId, "FondId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("FondId", null, "-- НЕТ --", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FondId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepartmentId, "DepartmentId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecshondeportamentId, "SecshondeportamentId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("SecshondeportamentId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SecshondeportamentId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetTypeId, "AssetTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("AssetTypeId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AssetTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Пользователи</div>
+            <div class="panel-body">
+                <div class="form-inline">
+                    <div class="form-group">
+                        @Html.DropDownList("AddUserList", null, new { @class = "form-control" })
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm Plus_User" data-loading-text="Добавление..." autocomplete="off">                        
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
+                        </button>
+</div>
+                <div id="divListUserForRule">@{Html.RenderAction("ListUserForRule", null, new { id = Model.Id });}</div>                
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecipEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecipEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RecipEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContinueProcessRulez, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.ContinueProcessRulez)
+                    @Html.ValidationMessageFor(model => model.ContinueProcessRulez, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FileMask, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FileMask, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FileMask, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GroupBy, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GroupBy, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GroupBy, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SaveDetachedSignature, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SaveDetachedSignature, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SaveDetachedSignature, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SaveFileWithSignature, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SaveFileWithSignature, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SaveFileWithSignature, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SaveInSubdirectory, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SaveInSubdirectory, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SaveInSubdirectory, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UseRule, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.UseRule)
+                    @Html.ValidationMessageFor(model => model.UseRule, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumberRule, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumberRule, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumberRule, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </div>
+}
+<div id="modDialogAddUser" class="modal fade" tabindex="-1" role="dialog">
+    <div id="dialogContentAddUser" class="modal-dialog modal-lg"></div>
+</div>
+
+<script type="text/javascript">
+
+    //$('.singl_daterangepicker').daterangepicker({
+    //    singleDatePicker: true,
+    //    locale: {
+    //        format: "YYYY-MM-DD"
+    //    }
+    //});
+
+    var myCombo1 = dhtmlXComboFromSelect("DogovorId");
+    var myCombo2 = dhtmlXComboFromSelect("FondId");
+    var myCombo3 = dhtmlXComboFromSelect("DepartmentId");
+    var myCombo4 = dhtmlXComboFromSelect("SecshondeportamentId");
+    var myCombo5 = dhtmlXComboFromSelect("AssetTypeId");
+    var myCombo6 = dhtmlXComboFromSelect("AddUserList");
+    myCombo1.enableFilteringMode("between");
+    myCombo2.enableFilteringMode("between");
+    myCombo3.readonly(true);
+    myCombo4.readonly(true);
+    myCombo5.readonly(true);
+    myCombo6.setComboValue(null);
+    myCombo6.setComboText("");
+    myCombo6.setPlaceholder("Выберите Пользователя");
+    myCombo6.enableFilteringMode("between");
+
+    $('button.Plus_User').on('click', function () {
+        var btn = $(this).button('loading');
+        var id = $('input[name="Id"]').val();
+        var id_user = myCombo6.getSelectedValue();
+        $.ajax({
+            async: true,
+            beforeSend: function () {
+                $('div#divListUserForRule').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
+            },
+            url: "/RuleSystems/AddUser/",
+            data: {
+                id: id,
+                id_user: id_user
+            },
+            cache: false,
+            success: function (data) {
+                $('div#divListUserForRule').html(data);
+                myCombo6.deleteOption(id_user);
+                myCombo6.setComboValue(null);
+                myCombo6.setComboText("");
+                btn.button('reset');
+            }
+        });
+    });
+
+
+
+    $(document).on("click", "button.button_add_user", function () {
+        var id_file = $(this).attr('id');
+        var msg = $('[name="comment_close_cb"]').val();
+        msg = $.trim(msg);
+        if (msg === "") {
+            $('div.requeri_comment p').text("Укажите комментарий!");
+        }
+        else {
+            newFile.server.fileClose(id_file, msg);
+        }
+    });
+
+</script>

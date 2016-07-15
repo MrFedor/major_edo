@@ -1,111 +1,123 @@
 ﻿@model IEnumerable<major_data.Models.FileInSystem>
 @using major_data.Models
 
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th></th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SizeFile)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DataCreate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CBInfo.PeriodXML)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CBInfo.Comment)
-                </th>
-                <th>
-                    Действие с файлом
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SizeFile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataCreate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CBInfo.PeriodXML)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CBInfo.Comment)
+            </th>
+            <th>
+                Действие с файлом
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string tr_fon = "";
+            FileStatus type_file = item.FileStatus;
+            switch (type_file)
             {
-                string tr_fon = "";
-                m_FileStatus type_file = item.FileStatus;
-                switch (type_file)
-                {
-                    case m_FileStatus.Close:
-                        tr_fon = "danger";
-                        break;
-                    case m_FileStatus.NaPodpis:
-                        tr_fon = "active";
-                        break;
-                    case m_FileStatus.ReOpen:
-                        tr_fon = "warning";
-                        break;
-                    case m_FileStatus.Podpisan:
-                        tr_fon = "success";
-                        break;
-                }
-                <tr data-id="@item.Id" class="@tr_fon">
-                    <td>
-                        @if (item.FileType == FileType.FileCB && item.CBInfo.VerifySig == true)
+                case FileStatus.Close:
+                    tr_fon = "danger";
+                    break;
+                case FileStatus.NaPodpis:
+                    tr_fon = "active";
+                    break;
+                case FileStatus.ReOpen:
+                    tr_fon = "warning";
+                    break;
+                case FileStatus.Podpisan:
+                    tr_fon = "success";
+                    break;
+            }
+            <tr data-id="@item.Id" class="@tr_fon">
+                <td>
+                    @if (item.FileType == FileType.FileCB && item.CBInfo.VerifySig == true)
+                    {
+                        <a tabindex="0" role="button" class="btn btn-success btn-sm butt_sig_popover" data-toggle="popover" data-id="@item.Id">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </a>
+                    }
+                    else if (item.FileType == FileType.FileCB && item.CBInfo.VerifySig == false)
+                    {
+                        <a tabindex="0" role="button" class="btn btn-danger btn-sm butt_sig_popover" data-toggle="popover" data-id="@item.Id">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                    }
+                    @if (item.FileType == FileType.FileCB && item.RouteFile == true)
+                    {
+                        <a tabindex="0" role="button" class="btn btn-info btn-sm butt_sverka" data-toggle="tooltip" data-placement="top" title="Сравнить" data-id="@item.Id">
+                            <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span>
+                        </a>
+                    }
+                    @if (item.FileType == FileType.FileRequestDeposit)
+                    {
+                        <a tabindex="0" role="button" class="btn btn-default btn-sm butt_xml_sogl" data-toggle="popover" data-id="@item.Id">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(item.Name, "Download", new { id = @item.Id, file_in = ViewBag.file_in }, null)
+                </td>
+                <td>
+                    @{double sz_file;
+                        string str_sz_file = "";
+                        sz_file = Math.Round((double)item.SizeFile / 1024);
+                        if (sz_file > 1024)
                         {
-                            <a tabindex="0" role="button" class="btn btn-success btn-sm butt_sig_popover" data-toggle="popover" data-id="@item.Id">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                            </a>
+                            sz_file = Math.Round(sz_file / 1024);
+                            str_sz_file = sz_file.ToString() + " МБ";
                         }
-                        else if (item.FileType == FileType.FileCB && item.CBInfo.VerifySig == false)
+                        else
                         {
-                            <a tabindex="0" role="button" class="btn btn-danger btn-sm butt_sig_popover" data-toggle="popover" data-id="@item.Id">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </a>
-                        }                        
-                        @if (item.FileType == FileType.FileCB && item.RouteFile == true)
-                        {                            
-                            <a tabindex="0" role="button" class="btn btn-info btn-sm butt_sverka" data-toggle="tooltip" data-placement="top" title="Сравнить" data-id="@item.Id">
-                                <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span>
-                            </a>                           
+                            str_sz_file = sz_file.ToString() + " КБ";
                         }
-                    </td>
-                    <td>
-                        @Html.ActionLink(item.Name, "Download", new { id = @item.Id, file_in = ViewBag.file_in }, null)
-                    </td>
-                    <td>
-                        @{double sz_file;
-                            string str_sz_file = "";
-                            sz_file = Math.Round((double)item.SizeFile / 1024);
-                            if (sz_file > 1024)
-                            {
-                                sz_file = Math.Round(sz_file / 1024);
-                                str_sz_file = sz_file.ToString() + " МБ";
-                            }
-                            else
-                            {
-                                str_sz_file = sz_file.ToString() + " КБ";
-                            }
+                    }
+                    @str_sz_file
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataCreate)
+                </td>
+                <td>
+                    @if (item.CBInfo != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.CBInfo.PeriodXML)
+                    }
+                </td>
+                <td class="comment_cb">
+                    @if (item.CBInfo != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.CBInfo.Comment)
+                    }
+                </td>
+                <td class="send_file_cb">
+                    @if (ViewBag.PermishonSignature == "Signature" && ViewBag.file_in == true)
+                    {
+                        Html.RenderPartial("_FileTypCBSignature", item);
+                    }
+                    else if (ViewBag.PermishonSignature == "ToSignature" && ViewBag.file_in == true)
+                    {
+                        Html.RenderPartial("_FileTypCBToSignature", item);
+                    }
+
+                </td>
+            </tr>
                         }
-                        @str_sz_file
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DataCreate)
-                    </td>
-                    <td>
-                        @if (item.CBInfo != null)
-                        {
-                            @Html.DisplayFor(modelItem => item.CBInfo.PeriodXML)
-                        }
-                    </td>
-                    <td class="comment_cb">
-                        @if (item.CBInfo != null)
-                        {
-                            @Html.DisplayFor(modelItem => item.CBInfo.Comment)
-                        }
-                    </td>
-                    <td class="send_file_cb">
-                        @{Html.RenderPartial("_FileTypCB", item);}
-                    </td>
-                </tr>
-                            }
-        </tbody>
-    </table>
-</div>
+    </tbody>
+</table>

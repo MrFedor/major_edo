@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
+    using System.ComponentModel.DataAnnotations.Schema;
     public class RuleSystem
     {
         public int Id { get; set; }
@@ -44,11 +44,34 @@
         //порядковый номер для реестра windows
         public int NumberRule { get; set; }
 
-        
+        [Display(Name = "Клиент")]
+        public int DogovorId { get; set; }
+
+        [Display(Name = "Департамент")]
+        public int DepartmentId { get; set; }
+
+        [Display(Name = "Отдел")]
+        public int SecshondeportamentId { get; set; }
+
+        [Display(Name = "Вид Актива")]
+        public int? AssetTypeId { get; set; }
+
+        [Display(Name = "Фонд")]
+        public int? FondId { get; set; }
+
+        [ForeignKey("DogovorId")]
         public virtual Dogovor Dogovor { get; set; }
+
+        [ForeignKey("FondId")]
         public virtual Fond Fond { get; set; }
+
+        [ForeignKey("AssetTypeId")]
         public virtual AssetType AssetType { get; set; }
+
+        [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; }
+
+        [ForeignKey("SecshondeportamentId")]
         public virtual Secshondeportament Secshondeportament { get; set; }
         public virtual ICollection<RuleUser> RuleUsers { get; set; }
         public virtual ICollection<ClientEmail> ClientEmails { get; set; }

@@ -38,7 +38,7 @@
         @Html.TextArea("comment_close_cb", new { @class = "form-control", placeholder = "Комментарий" })
     </div>
     <div class="modal-footer">
-        <button class="btn btn-default button_close_cb" name="button_close_cb" type="button">
+        <button class="btn btn-default button_close_cb" name="button_close_cb" type="button" id="@Model.Id">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Закрыть файл
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
