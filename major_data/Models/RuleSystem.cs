@@ -45,7 +45,7 @@
         public int NumberRule { get; set; }
 
         [Display(Name = "Клиент")]
-        public int DogovorId { get; set; }
+        public int ClientId { get; set; }
 
         [Display(Name = "Департамент")]
         public int DepartmentId { get; set; }
@@ -59,8 +59,8 @@
         [Display(Name = "Фонд")]
         public int? FondId { get; set; }
 
-        [ForeignKey("DogovorId")]
-        public virtual Dogovor Dogovor { get; set; }
+        [ForeignKey("ClientId")]
+        public virtual Client Client { get; set; }
 
         [ForeignKey("FondId")]
         public virtual Fond Fond { get; set; }

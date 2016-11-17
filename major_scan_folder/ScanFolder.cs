@@ -374,16 +374,46 @@
                     }
                 }
 
-                int indexStart_o = signedCms.SignerInfos[i].Certificate.Subject.IndexOf("O=");
+
+                string _sn_name = "";
+                string _g_name = "";
+                int indexStart_g = signedCms.SignerInfos[i].Certificate.Subject.IndexOf("G=");
+                if (indexStart_g >= 0)
+                {
+                    int indexEnd = signedCms.SignerInfos[i].Certificate.Subject.IndexOf(",", indexStart_g);
+                    indexStart_g += 2;
+                    if (indexStart_g < indexEnd)
+                    {
+                        _g_name = signedCms.SignerInfos[i].Certificate.Subject.Substring(indexStart_g, indexEnd - indexStart_g);
+                    }
+                }
+
+                int indexStart_o = signedCms.SignerInfos[i].Certificate.Subject.IndexOf("SN=");
                 if (indexStart_o >= 0)
                 {
                     int indexEnd = signedCms.SignerInfos[i].Certificate.Subject.IndexOf(",", indexStart_o);
-                    indexStart_o += 2;
+                    indexStart_o += 3;
                     if (indexStart_o < indexEnd)
                     {
-                        cert.Client = signedCms.SignerInfos[i].Certificate.Subject.Substring(indexStart_o, indexEnd - indexStart_o);
+                        _sn_name = signedCms.SignerInfos[i].Certificate.Subject.Substring(indexStart_o, indexEnd - indexStart_o);
                     }
                 }
+
+                cert.Client = _sn_name.Trim() + " " + _g_name.Trim();
+                
+
+                //int indexStart_o = signedCms.SignerInfos[i].Certificate.Subject.IndexOf("O=");
+                //if (indexStart_o >= 0)
+                //{
+                //    int indexEnd = signedCms.SignerInfos[i].Certificate.Subject.IndexOf(",", indexStart_o);
+                //    indexStart_o += 2;
+                //    if (indexStart_o < indexEnd)
+                //    {
+                //        cert.Client = signedCms.SignerInfos[i].Certificate.Subject.Substring(indexStart_o, indexEnd - indexStart_o);
+                //    }
+                //}
+                
+
 
                 foreach (CryptographicAttributeObject item in signedCms.SignerInfos[i].SignedAttributes)
                 {

@@ -19,71 +19,64 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography;
 using System.IO.Compression;
 using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace major_console
 {
 
     class Program
     {
-        private static Logger _logger = LogManager.GetCurrentClassLogger();        
-        //private static UserContext db = new UserContext("DBConnection_test");
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static UserContext db = new UserContext("DBConnection");
 
 
         static void Main(string[] args)
         {
             try
-            {                
-                //string _path_to_out = @"\\server-edo\ARCHIVE\OUT";
-                string _path_to_out = @"D:\xtdd_sql";
-                string _tmp_dir_copy = @"D:\xtdd_sql";
+            {
+                // Добавление отправленных отчетов ЦБ в intranet
+                //AddReestrXTDD();
 
-                foreach (var item_dir in Directory.EnumerateDirectories(_path_to_out))
+                var _cert = db.CBCert.Where(o=>o.FIO.Contains("\"")).ToList();
+
+                foreach (var rawData in _cert)
                 {
-                    Console.WriteLine(item_dir);
-                    foreach (string item_files in Directory.EnumerateFiles(Path.Combine(_path_to_out, item_dir)))
-                    {
-                        FileInfo file_inf = new FileInfo(item_files);
-                        bool _true = true;
-                        if (_true)
-                        {
-                            if (file_inf.Extension.ToLower() == ".xtdd" || file_inf.Extension.ToLower() == ".zip")
-                            {
-                                byte[] file_byte = File.ReadAllBytes(file_inf.FullName);
+                    X509Certificate2 _X509 = new X509Certificate2(rawData.RawData);
 
-                                if (file_inf.Extension.ToLower() == ".xtdd")
-                                {
-                                    using (MemoryStream reader = new MemoryStream(file_byte))
-                                    {
-                                        reader.Seek(0, SeekOrigin.Begin);
-                                        ReestrXtdd.ScanFolder(reader, item_dir, file_inf);
-                                    }
-                                }
-                                if (file_inf.Extension.ToLower() == ".zip")
-                                {
-                                    using (MemoryStream reader = new MemoryStream(file_byte))
-                                    {
-                                        reader.Seek(0, SeekOrigin.Begin);
-                                        ZipStream.RecursZip_stream(reader, item_dir, file_inf);
-                                    }
-                                }
-                            }
-                        }
-                        else
+
+                    string _sn_name = "";
+                    string _g_name = "";
+                    string _fio = "";
+                    int indexStart_g = _X509.Subject.IndexOf("G=");
+                    if (indexStart_g >= 0)
+                    {
+                        int indexEnd = _X509.Subject.IndexOf(",", indexStart_g);
+                        indexStart_g += 2;
+                        if (indexStart_g < indexEnd)
                         {
-                            if (file_inf.Extension.ToLower() == ".sig")
-                            {
-                                string _data_folder = item_dir.Substring(item_dir.LastIndexOf("\\") + 1);
-                                string folder = Path.Combine(_tmp_dir_copy, _data_folder);
-                                if (!Directory.Exists(folder))
-                                {
-                                    Directory.CreateDirectory(folder);
-                                }
-                                File.Copy(file_inf.FullName, Path.Combine(folder, file_inf.Name), true);
-                                Console.WriteLine(file_inf.FullName);
-                            }
+                            _g_name = _X509.Subject.Substring(indexStart_g, indexEnd - indexStart_g);
                         }
                     }
+
+                    int indexStart_o = _X509.Subject.IndexOf("SN=");
+                    if (indexStart_o >= 0)
+                    {
+                        int indexEnd = _X509.Subject.IndexOf(",", indexStart_o);
+                        indexStart_o += 3;
+                        if (indexStart_o < indexEnd)
+                        {
+                            _sn_name = _X509.Subject.Substring(indexStart_o, indexEnd - indexStart_o);
+                        }
+                    }
+
+                    _fio = _sn_name.Trim() + " " + _g_name.Trim();
+
+                    rawData.FIO = _fio;
                 }
+                db.SaveChanges();
+
+
+                Console.WriteLine("OK");
 
 
                 #region MyRegion
@@ -182,6 +175,63 @@ namespace major_console
             Console.WriteLine("OK");
             Console.ReadLine();            
         }
+
+
+        static void AddReestrXTDD()
+        {
+            //string _path_to_out = @"\\server-edo\ARCHIVE\OUT";
+            string _path_to_out = @"D:\xtdd_sql";
+            string _tmp_dir_copy = @"D:\xtdd_sql";
+
+            foreach (var item_dir in Directory.EnumerateDirectories(_path_to_out))
+            {
+                Console.WriteLine(item_dir);
+                foreach (string item_files in Directory.EnumerateFiles(Path.Combine(_path_to_out, item_dir)))
+                {
+                    FileInfo file_inf = new FileInfo(item_files);
+                    bool _true = true;
+                    if (_true)
+                    {
+                        if (file_inf.Extension.ToLower() == ".xtdd" || file_inf.Extension.ToLower() == ".zip")
+                        {
+                            byte[] file_byte = File.ReadAllBytes(file_inf.FullName);
+
+                            if (file_inf.Extension.ToLower() == ".xtdd")
+                            {
+                                using (MemoryStream reader = new MemoryStream(file_byte))
+                                {
+                                    reader.Seek(0, SeekOrigin.Begin);
+                                    ReestrXtdd.ScanFolder(reader, item_dir, file_inf);
+                                }
+                            }
+                            if (file_inf.Extension.ToLower() == ".zip")
+                            {
+                                using (MemoryStream reader = new MemoryStream(file_byte))
+                                {
+                                    reader.Seek(0, SeekOrigin.Begin);
+                                    ZipStream.RecursZip_stream(reader, item_dir, file_inf);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (file_inf.Extension.ToLower() == ".sig")
+                        {
+                            string _data_folder = item_dir.Substring(item_dir.LastIndexOf("\\") + 1);
+                            string folder = Path.Combine(_tmp_dir_copy, _data_folder);
+                            if (!Directory.Exists(folder))
+                            {
+                                Directory.CreateDirectory(folder);
+                            }
+                            File.Copy(file_inf.FullName, Path.Combine(folder, file_inf.Name), true);
+                            Console.WriteLine(file_inf.FullName);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     public static class ZipStream
