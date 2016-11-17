@@ -6,19 +6,7 @@ namespace major_data
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Models;
     using IdentityModels;
-
-    public class ProcedureContext : DbContext
-    {
-        public ProcedureContext()
-            : base("DBConnection_procedur")
-        {
-            Database.SetInitializer<ProcedureContext>(null);// Remove default initializer
-            Configuration.ProxyCreationEnabled = false;
-            Configuration.LazyLoadingEnabled = false;
-        }
-
-    }
-
+    
     public class UserContext : IdentityDbContext<ApplicationUser>
     {
         public UserContext()
@@ -37,6 +25,7 @@ namespace major_data
         public UserContext(string NameConnectionStrings)
             : base(NameConnectionStrings)
         {
+            Database.SetInitializer<UserContext>(null);
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
         }
@@ -65,13 +54,7 @@ namespace major_data
                 .WithOptional(t => t.CBInfo)
                 .Map(m => m.MapKey("FileInSystemId"))
                 .WillCascadeOnDelete(true);
-
-            modelBuilder.Entity<FileRequst>()
-                .HasRequired(t => t.FileInSystem)
-                .WithOptional(t => t.FileRequst)
-                .Map(m => m.MapKey("FileInSystemId"))
-                .WillCascadeOnDelete(true);
-
+            
             modelBuilder.Entity<CBCert>()
                 .HasRequired(t => t.CBInfo)
                 .WithMany(t => t.CBCerts)
@@ -119,7 +102,6 @@ namespace major_data
         public DbSet<Secshondeportament> Secshondeportament { get; set; }
         public DbSet<Permission> Permission { get; set; }
         public DbSet<Enumpermission> Enumpermission { get; set; }
-        public DbSet<FileRequst> FileRequst { get; set; }
         public DbSet<SettingsDirectory> SettingsDirectory { get; set; }
     }
 }

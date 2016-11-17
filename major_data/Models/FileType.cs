@@ -3,7 +3,6 @@
     public enum FileType : byte
     {
         FileOther,       
-        FileCB,
-        FileRequestDeposit
+        FileCB
     }
 }

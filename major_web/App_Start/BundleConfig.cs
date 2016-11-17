@@ -24,6 +24,9 @@ namespace major_web
                         "~/Scripts/dhtmlxcombo.js",
                         "~/Scripts/dhtmlxlayout.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/material").Include(
+                        "~/Scripts/material.min.js"));
+
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
             // используйте средство сборки на сайте http://modernizr.com, чтобы выбрать только нужные тесты.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -47,6 +50,10 @@ namespace major_web
                       "~/Scripts/daterangepicker.js",
                       "~/Scripts/toastr.min.js"
                       ));
+
+            bundles.Add(new StyleBundle("~/Content/material").Include(
+                      "~/Content/material-css.css",
+                      "~/Content/material.min.css"));
         }
     }
 }

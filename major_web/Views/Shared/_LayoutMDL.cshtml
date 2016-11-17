@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=ru">
+
+    <title>@ViewBag.Title – Админка</title>
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/material")
+    
+    <style>
+        .util-center {
+            margin: auto;
+        }
+
+        .util-max-512px {
+            max-width: 512px;
+        }
+
+        .util-spacing-h--40px {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .util-no-decoration {
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<body class="mdl-color--blue-grey-50">
+    <div>
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/material")
+</body>
+</html>

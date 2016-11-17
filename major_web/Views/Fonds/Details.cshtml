@@ -1,0 +1,50 @@
+﻿@model major_data.Models.Fond
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Fond</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LicNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LicNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NameFolderFoPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NameFolderFoPath)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -37,18 +37,26 @@ namespace major_web
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
             });
-
+            
             GlobalConfiguration.Configuration.UseSqlServerStorage("DBConnection");
             var options = new DashboardOptions
             {
                 AppPath = VirtualPathUtility.ToAbsolute("~"),
-                AuthorizationFilters = new[] {
-                    new Hangfire.Dashboard.AuthorizationFilter { Users = "admin, superuser", Roles = "Administrator" }
-                }
+                Authorization = new[] { new MyAuthorizationFilter() }
             };
             app.UseHangfireDashboard("/jobs", options);
 
             app.MapSignalR();
+        }
+
+        
+    }
+
+    class MyAuthorizationFilter : Hangfire.Dashboard.IDashboardAuthorizationFilter
+    {
+        public bool Authorize(Hangfire.Dashboard.DashboardContext context)
+        {
+            return true;
         }
     }
 }

@@ -108,6 +108,12 @@ namespace major_web.Controllers
         // GET: RuleSystems/Create
         public ActionResult Create()
         {
+            RuleSystem _rule = new RuleSystem();
+            _rule.Type = 3;
+            _rule.StartDate = DateTime.Now;
+            _rule.UseRule = true;
+            _rule.NumberRule = 0;
+
             ViewBag.AssetTypeId = new SelectList(db.AssetType.OrderBy(o=>o.Name).ToList(), "Id", "Name");
             ViewBag.DepartmentId = new SelectList(db.Department.OrderBy(o => o.Name).ToList(), "Id", "Name");
             ViewBag.DogovorId = new SelectList(db.Dogovor, "Id", "DogovorNum");
@@ -115,7 +121,7 @@ namespace major_web.Controllers
             ViewBag.SecshondeportamentId = new SelectList(db.Secshondeportament.OrderBy(o => o.Name).ToList(), "Id", "Name");
 
             ViewBag.AppUserList = new MultiSelectList(db.Users.OrderBy(o => o.FirstName).ToList(), "Id", "UserName");
-            return View();
+            return View(_rule);
         }
 
         // POST: RuleSystems/Create

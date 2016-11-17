@@ -1,0 +1,42 @@
+﻿@model major_data.Models.Dogovor
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Dogovor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DogovorNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DogovorNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DogovorDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DogovorDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

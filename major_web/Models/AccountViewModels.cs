@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace major_web.Models
@@ -97,5 +95,24 @@ namespace major_web.Models
         public ICollection<Certificate> Certificates { get; set; }
         public ICollection<Permission> Permissions { get; set; }
     }
-    
+
+    public class ResetPasswordViewModel
+    {
+        [Required]
+        [Display(Name = "Логин")]
+        public string UserName { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "Значение {0} должно содержать не менее {2} символов.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Пароль")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Подтверждение пароля")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
+        public string ConfirmPassword { get; set; }
+
+        public string Code { get; set; }
+    }
 }

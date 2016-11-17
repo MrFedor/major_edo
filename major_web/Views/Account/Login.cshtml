@@ -2,50 +2,81 @@
 @model major_web.Models.LoginViewModel
 @{
     ViewBag.Title = "Вход в личный кабинет";
+    Layout = "~/Views/Shared/_LayoutMDL.cshtml";
 }
 
 
-<div class="row">
-    <div class="col-md-3 col-md-offset-4">
-        <h3 class="text-center">@ViewBag.Title</h3>
-        <section id="loginForm">
+<!-- LOGIN FORM -->
+<div class="mdl-grid">
+
+    <div class="mdl-card mdl-shadow--16dp util-center util-spacing-h--40px">
+        <div class="mdl-card__title mdl-color--blue-600">
+            <h2 class="mdl-card__title-text mdl-color-text--white">Личный кабинет</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-grid">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
-                @Html.AntiForgeryToken()                
-                <hr />
+                @Html.AntiForgeryToken()
+                @*<input type="hidden" name="action" value="login" />*@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                    </div>
+
+
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                    @*<label class="mdl-textfield__label mdl-color-text--grey" for="textfield_username">Username</label>
+                        <input class="mdl-textfield__input" type="text" id="textfield_username" name="username" />*@
+                    @Html.LabelFor(m => m.UserName, new { @class = "mdl-textfield__label mdl-color-text--grey" })
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "mdl-textfield__input" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "mdl-textfield__error" })
+
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                    @*<label class="mdl-textfield__label mdl-color-text--grey" for="textfield_password">Password</label>
+                        <input class="mdl-textfield__input" type="password" id="textfield_password" name="password" />*@
+                    @Html.LabelFor(m => m.Password, new { @class = "mdl-textfield__label mdl-color-text--grey" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "mdl-textfield__input" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "mdl-textfield__error" })
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
-                        </div>
-                    </div>
+
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+                    <label id="checkbox_rm" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="RememberMe">
+                        <input type="checkbox" id="RememberMe" class="mdl-checkbox__input" name="RememberMe" value="false"/>
+                        <span class="mdl-checkbox__label">Запомнить меня</span>
+                    </label>
+
+                    @*@Html.CheckBoxFor(m => m.RememberMe, new { @class = "mdl-checkbox__input" })
+                        @Html.LabelFor(m => m.RememberMe, new { @class = "mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" })*@
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Выполнить вход" class="btn btn-default" />
-                    </div>
-                </div>                
+
+                <div class="mdl-cell mdl-cell--12-col send-button" align="center">
+                    <button type="submit" class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--raised mdl-button--colored mdl-color--blue-600">
+                        Войти
+                    </button>
+                </div>
             }
-        </section>
-    </div>   
+        </div>
+    </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script type="text/javascript">
+
+
+    $('body').on('click', '#checkbox_rm', function (e) {
+        e.preventDefault();
+        var _in = $('input[name="RememberMe"]');
+        if ($('#checkbox_rm').is('.is-checked')) {
+            _in.attr('value', false);
+            document.querySelector('#checkbox_rm').MaterialCheckbox.uncheck();
+        }
+        else {
+            _in.attr('value', true);
+            document.querySelector('#checkbox_rm').MaterialCheckbox.check();
+        }
+    });
+
+
+</script>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

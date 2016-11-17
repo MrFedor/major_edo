@@ -1,0 +1,56 @@
+﻿@model major_data.Models.Fond
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Fond</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LicNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LicNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NameFolderFoPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NameFolderFoPath)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

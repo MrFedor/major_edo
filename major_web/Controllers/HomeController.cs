@@ -14,9 +14,6 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Web.UI.WebControls;
 using major_data;
-using client_data.Models;
-using client_data.ClientXmlViewsModels;
-using major_fansyspr;
 
 namespace major_web.Controllers
 {
@@ -29,7 +26,6 @@ namespace major_web.Controllers
 
         private ApplicationUserManager _userManager;
         private UserContext db = new UserContext();
-        private FansySprContext fansy_spr = new FansySprContext();
 
         public HomeController()
         {
@@ -56,7 +52,10 @@ namespace major_web.Controllers
         {
             return View();
         }
-
+        public ActionResult Mdl()
+        {
+            return View();
+        }
 
         //private IEnumerable<SelectListItem> GetDepartment(int? id)
         //{
@@ -533,91 +532,7 @@ namespace major_web.Controllers
                 .FirstOrDefault();
             return PartialView("_CloseFile", _file);
         }
-
-        public ActionResult XMLSogl(int id_file, bool file_in)
-        {
-            var get_file = db.FileInSystem.Include("RuleSystem.Department").Where(p => p.Id == id_file && p.RouteFile == file_in).Single();
-            string full_path = "";
-
-            if (file_in)
-            {
-                full_path = System.IO.Path.Combine(get_file.RuleSystem.Path, folder_in, get_file.OperDate.ToString("yyyyMMdd"), get_file.Name);
-            }
-            else
-            {
-                full_path = System.IO.Path.Combine(get_file.RuleSystem.Path.Replace(get_file.RuleSystem.Department.NameFolderFoPath, folder_send + "\\" + get_file.RuleSystem.Department.NameFolderFoPath), get_file.OperDate.ToString("yyyyMMdd"), get_file.Name);
-            }
-
-            XmlSerializer serializer = new XmlSerializer(typeof(RequestDeposits));
-            RequestDeposits _RequestDeposit;
-            using (StreamReader reader = new StreamReader(full_path))
-            {
-                _RequestDeposit = (RequestDeposits)serializer.Deserialize(reader);
-            }
-            RequestSoglasieViewModels _req = new RequestSoglasieViewModels();
-            _req.OutNumber = _RequestDeposit.OutNumber;
-            _req.OutDate = _RequestDeposit.OutDate;
-            _req.DuNumDate = _RequestDeposit.DuNumDate;
-            _req.ClientId = fansy_spr.Client.Where(o => o.Fansy_ID == _RequestDeposit.ClientId).Select(o=>o.Name).FirstOrDefault();
-            _req.PortfolioId = fansy_spr.Dogovor.Where(o => o.Fansy_ID == _RequestDeposit.PortfolioId).Select(o => o.Name).FirstOrDefault();
-            _req.RubricaOut = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("RUBRICA_OUT")).Select(o => 
-            new RadioButton {
-                ID = o.NUM.ToString(),
-                Checked = (o.NUM == _RequestDeposit.RubricaOut),
-                Text = o.NAME,
-                
-            }).ToList();
-            _req.KoId = fansy_spr.Banks.Where(o => o.CLIENT_ID == _RequestDeposit.KoId).Select(o => o.BANKS_NAME).FirstOrDefault();
-            if (_RequestDeposit.FilialId != null)
-            {
-                _req.FilialId = fansy_spr.Banks.Where(o => o.CLIENT_ID == _RequestDeposit.FilialId).Select(o => o.BANKS_NAME).FirstOrDefault();
-            }
-            else
-            {
-                _req.FilialId = String.Empty;
-            }
-            
-            _req.ValueTypes = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("VALUE_TYPES") && r.NUM == _RequestDeposit.ValueTypes).Select(o => o.NAME).FirstOrDefault();
-            _req.DepositSum = _RequestDeposit.DepositSum;
-            _req.DepositCurrency = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("CURRENCY") && r.NUM == _RequestDeposit.DepositCurrency).Select(o => o.NAME).FirstOrDefault();
-            _req.SettlementCurrency = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("CURRENCY") && r.NUM == _RequestDeposit.SettlementCurrency).Select(o => o.NAME).FirstOrDefault();
-            _req.BalanceMin = _RequestDeposit.BalanceMin;
-            _req.DepositDogNum = _RequestDeposit.DepositDogNum;
-            _req.DepositDogDate = _RequestDeposit.DepositDogDate;
-            //_req.AgreementContractNum = _RequestDeposit.AgreementContractNum;
-            //_req.AgreementContractDate = _RequestDeposit.AgreementContractDate;
-            //_req.ChangesDogDate = _RequestDeposit.ChangesDogDate;
-            //_req.TerminationDogDate = _RequestDeposit.TerminationDogDate;
-            _req.ContributionType = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("PERCENT_TYPE") && r.NUM == _RequestDeposit.ContributionType).Select(o => o.NAME).FirstOrDefault();
-            _req.DepositDogDateEnd = _RequestDeposit.DepositDogDateEnd;
-            _req.DepositAccount = _RequestDeposit.DepositAccount;
-            _req.TransferDateEnd = _RequestDeposit.TransferDateEnd;
-            _req.ContributionDogType = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("D_SHARE_TYPE") && r.NUM == _RequestDeposit.ContributionDogType).Select(o => o.NAME).FirstOrDefault();
-            _req.RateValue = _RequestDeposit.RateValue;
-            //_req.PercentPeriods = new List<Models.PercentPeriods>();
-            //foreach (var item in _RequestDeposit.PercentPeriods)
-            //{
-            //    _req.PercentPeriods.Add(new Models.PercentPeriods { StartDate = item.StartDate, EndDate=item.EndDate, PercentRate = item.PercentRate });
-            //}
-            _req.PeriodPayment = fansy_spr.OD_USR_TABS.Where(r => r.CODE.Contains("PERCENT_MODE") && r.NUM == _RequestDeposit.PeriodPayment).Select(o => o.NAME).FirstOrDefault();
-            _req.PeriodsInterestDate = _RequestDeposit.PeriodsInterestDate;
-            _req.DepositSubordinated = _RequestDeposit.DepositSubordinated;
-            _req.AccountReturn = _RequestDeposit.AccountReturn;
-            _req.KoAccountOpen = fansy_spr.Banks.Where(o => o.CLIENT_ID == _RequestDeposit.KoAccountOpen).Select(o => o.BANKS_NAME).FirstOrDefault();
-            _req.ExistenceContractConditions = _RequestDeposit.ExistenceContractConditions;
-            _req.NoExistenceContractConditions = _RequestDeposit.NoExistenceContractConditions;
-            _req.AuthorizedPersonFIO = _RequestDeposit.AuthorizedPersonFIO;
-            _req.AuthorizedPersonPost = _RequestDeposit.AuthorizedPersonPost;            
-            _req.RequestStatus = db.FileRequst.Include("FileInSystem").Where(o=>o.FileInSystem.Id == id_file).Select(o=>o.RequestStatus).FirstOrDefault() == 0 ? true : false;
-            _req.RequestNum = db.FileRequst.Include("FileInSystem").Where(o => o.FileInSystem.Id == id_file).Select(o => o.RequestNum).FirstOrDefault();
-            _req.RequestDate = db.FileRequst.Include("FileInSystem").Where(o => o.FileInSystem.Id == id_file).Select(o => o.RequestDate).FirstOrDefault();
-            _req.RequestDescription = db.FileRequst.Include("FileInSystem").Where(o => o.FileInSystem.Id == id_file).Select(o => o.RequestDescription).FirstOrDefault();
-            _req.CommentCD = _RequestDeposit.CommentCD;
-
-
-            return PartialView("_XMLSogl", _req);
-        }
-
+        
         [HttpPost]
         public ContentResult Upload(int? file_nash_out, int? file_client_in)
         {

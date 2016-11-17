@@ -19,6 +19,9 @@
         [Display(Name = "Хэш файла")]
         public string HashFile { get; set; }
 
+        [Display(Name = "Комментарий")]
+        public string Comment { get; set; }
+
         [Display(Name = "Дата создания файла")]
         public DateTime DataCreate { get; set; }
 
@@ -37,6 +40,5 @@
         public virtual FileInSystem FileIn { get; set; }
         public virtual RuleSystem RuleSystem { get; set; }
         public virtual CBInfo CBInfo { get; set; }
-        public virtual FileRequst FileRequst { get; set; }
     }
 }

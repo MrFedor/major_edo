@@ -67,6 +67,10 @@
             </div>
         </div>
 
+        <button type="button" class="btn btn-primary btn-sm resset_pass" data-loading-text="Смена пароля..." autocomplete="off">
+            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Сброс пароля
+        </button>
+
         <div class="panel panel-default">
             <div class="panel-heading">Сертификаты</div>
             <div class="panel-body">
@@ -151,3 +155,26 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script type="text/javascript">
+    $('button.resset_pass').on('click', function () {
+        var btn = $(this).button('loading');
+        var UserName = $('input[name="UserName"]').val();        
+        $.ajax({
+            type: "POST",
+            async: true,
+            url: "/ApplicationUsers/ResetPassword/",
+            data: {
+                UserName: UserName
+            },
+            cache: false,
+            success: function (data) {                
+                btn.button('reset');
+                toastr.success(data);
+            },
+            error: function (jqxhr, status, errorMsg) {
+                toastr.warning("Статус: " + status + " Ошибка: " + errorMsg);
+            }
+        });
+    });
+</script>

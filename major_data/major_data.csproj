@@ -99,8 +99,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="X.PagedList, Version=5.1.0.33787, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\X.PagedList.5.1.0.5000\lib\portable-net45+wp8+win8\X.PagedList.dll</HintPath>
+    <Reference Include="X.PagedList, Version=5.3.0.21888, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\X.PagedList.5.3.0.5300\lib\portable-net45+wp8+win8\X.PagedList.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -225,13 +225,20 @@
     <Compile Include="Migrations\201607120711224_20160712-0.Designer.cs">
       <DependentUpon>201607120711224_20160712-0.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610281539312_20161028_0.cs" />
+    <Compile Include="Migrations\201610281539312_20161028_0.Designer.cs">
+      <DependentUpon>201610281539312_20161028_0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611161527222_20161116-0.cs" />
+    <Compile Include="Migrations\201611161527222_20161116-0.Designer.cs">
+      <DependentUpon>201611161527222_20161116-0.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\AssetType.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ClientEmail.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Dogovor.cs" />
     <Compile Include="Models\Enumpermission.cs" />
-    <Compile Include="Models\FileRequst.cs" />
     <Compile Include="Models\Fond.cs" />
     <Compile Include="Models\CBCert.cs" />
     <Compile Include="Models\Certificate.cs" />
@@ -343,6 +350,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607120711224_20160712-0.resx">
       <DependentUpon>201607120711224_20160712-0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610281539312_20161028_0.resx">
+      <DependentUpon>201610281539312_20161028_0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611161527222_20161116-0.resx">
+      <DependentUpon>201611161527222_20161116-0.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

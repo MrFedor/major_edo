@@ -16,6 +16,7 @@ using major_data;
 
 namespace major_web.Controllers
 {
+    [Authorize]
     public class ApplicationUsersController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -292,6 +293,24 @@ namespace major_web.Controllers
                 }
             }
             return RedirectToAction("Index", "ApplicationUsers");
+        }
+
+        //
+        // POST: /ApplicationUsers/ResetPassword
+        [HttpPost]
+        [AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        public async Task<string> ResetPassword(string UserName)
+        {           
+            var user = await UserManager.FindByNameAsync(UserName);           
+            string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            string password = "z1234567890Z";
+            var result = await UserManager.ResetPasswordAsync(user.Id, code, password);
+            if (result.Succeeded)
+            {
+                return "Пароль сброшен";
+            }
+            return "Ошибка в сбросе пароля";
         }
 
         protected override void Dispose(bool disposing)

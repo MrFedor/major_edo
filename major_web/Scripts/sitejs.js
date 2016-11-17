@@ -1,5 +1,16 @@
 ﻿moment.locale('ru');
 
+$('body').on('focus', '.form_datesinglpicker', function (e) {
+    e.preventDefault();
+    $(this).daterangepicker({
+        singleDatePicker: true,
+        locale: {
+            format: "YYYY-MM-DD"
+        }
+    });
+});
+
+
 $('body').on('focus', '.form_daterangepicker', function (e) {
     e.preventDefault();
     $(this).daterangepicker({
@@ -314,32 +325,6 @@ var delay = (function () {
         timer = setTimeout(callback, ms);
     };
 })();
-
-
-//Модальное окно - просмотр XML Согласия/Договора
-$('body').on('click', '.butt_xml_sogl', function (e) {
-    e.preventDefault();
-    var mod = $(this);
-    var id_file = mod.data("id");
-    var file_in = $('input[name="file_in"]').val();
-    $('#modDialogXmlSogl').modal('show');
-    $.ajax({
-        async: false,
-        beforeSend: function () {
-            $('div#dialogContentXmlSogl').html("<img class='center-block' src='/Content/imgs/ring-alt.gif' />");
-        },
-        url: "/Home/XMLSogl/",
-        data: {
-            id_file: id_file,
-            file_in: file_in
-        },
-        cache: false,
-        success: function (data) {
-            $('#dialogContentXmlSogl').html(data);
-            //$('#modDialogXmlSogl').modal('show');
-        }
-    });
-});
 
 
 //Обработчик кнопки Сверка в ТаскЛисте и в ЛистЛисте

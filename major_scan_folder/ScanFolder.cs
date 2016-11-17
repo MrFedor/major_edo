@@ -1,11 +1,8 @@
 ﻿namespace major_scan_folder
 {
-    using client_data;
-    using client_data.Models;
     using Hangfire;
     using major_data;
     using major_data.Models;
-    using major_fansyspr;
     using NLog;
     using System;
     using System.Collections.Generic;
@@ -26,12 +23,10 @@
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private string in_folder = "Входящие";
         private string tmp_folder = @"\\server-edo\TEST\TEMP";
-        private string folder_send = "Send";
-        private string folder_out = "Исходящие";
+        //private string folder_send = "Send";
+        //private string folder_out = "Исходящие";
         //private string _path_out_xml = @"\\Server-edo\test\REESTR\PIF\TEST_UK\TEST_FOND\Исходящие";
         private UserContext db = new UserContext();
-        private FansySprContext fansy_db = new FansySprContext();
-        private ClientContext client_db = new ClientContext();
 
         public ScanFolder()
         { }
@@ -113,12 +108,11 @@
             {
                 _logger.Error(ex, "{0} : {1} : {2} : {3}", ex.Message, ex.TargetSite, ex.StackTrace, ex.InnerException);
             }
-
         }
 
         private void FileNew(RuleSystem pathTOfolder, DateTime dir_date, string item_file)
         {
-            if (item_file.ToLower().EndsWith(".sgn") == false) //TODO: Заглушка для длянных имен файло - они не обрабатываются
+            if (item_file.ToLower().EndsWith(".sgn") == false) //TODO: Заглушка для длинных имен файлов - они не обрабатываются
             {
                 if (item_file.Length < 260)
                 {
@@ -202,327 +196,7 @@
                             }
                             */
                         }
-                        else if (file_inf.Extension.ToLower() == ".xml")
-                        {
-                            XDocument custOrdDoc = XDocument.Load(file_inf.FullName, LoadOptions.None);
-                            string namesp = custOrdDoc.Root.Name.LocalName;
-                            if (namesp == "RequestDeposit")
-                            {
-                                FileRequst fileRequst = new FileRequst();
-                                FileInSystem _File_collection = new FileInSystem();
-                                string _coomet_error = string.Empty;
-                                XmlSerializer serializer = new XmlSerializer(typeof(RequestDeposits));
-                                RequestDeposits _RequestDeposit;
-                                using (StreamReader reader = new StreamReader(item_file))
-                                {
-                                    _RequestDeposit = (RequestDeposits)serializer.Deserialize(reader);
-                                }
-
-                                try
-                                {
-                                    //Регестрируем в FANSY в журнале входящих
-                                    _RequestDeposit = RegRequest.ProcRegRequest(_RequestDeposit);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _coomet_error = ex.Message;
-                                    _logger.Error(ex, "{0} : {1} : {2} : {3}", ex.Message, ex.TargetSite, ex.StackTrace, ex.InnerException);
-                                }
-
-                                if (string.IsNullOrEmpty(_coomet_error))
-                                {
-                                    #region проверка на согласие
-
-                                    //проверка на согласие
-                                    bool is_check = true;
-
-                                    // 1 - Наличие у Банка лицензии на осуществление банковской деятельности (ПОКА НЕТ)
-                                    //var _o = fansy_db.Banks.Where(x=>x.CLIENT_ID == _RequestDeposit.KoId).Select()
-
-                                    // 2 - Срок на который размещается депозит не должен превышать Дату окончания срока действия Правил доверительного управления ПИФом + 6 месяцев
-                                    DateTime? _sdf = fansy_db.Dogovor.Where(x => x.Fansy_ID == _RequestDeposit.PortfolioId).Select(x => x.EndDate).FirstOrDefault();
-                                    if (_sdf.HasValue)
-                                    {
-                                        _sdf = _sdf.GetValueOrDefault().AddMonths(6);
-                                    }
-                                    else
-                                    {
-
-                                    }
-
-                                    // 3 - Ставка депозита. Ставка не должна быть менее 80%
-
-
-
-                                    // 4 - Счет, на который осуществляется возврат суммы депозита и начисленных процентов. наличие обязательной третьей подписи СД
-                                    var _tre_pod = fansy_db.BanksAccount.Where(x => x.ACC_ID == _RequestDeposit.AccountReturn).Select(x => x.IS_SD).FirstOrDefault();
-                                    // Наличие Третей подписи СД = 1, иначе 0
-                                    if (_tre_pod == 0)
-                                    {
-                                        is_check = false;
-                                        _RequestDeposit.RequestDescription = _RequestDeposit.RequestDescription + "Отсутствует 3 подпись СД";
-                                    }
-
-
-                                    // 5 - Страхование вклада
-                                    if (pathTOfolder.AssetTypeId == 22)
-                                    {
-                                        var _dfgdf = fansy_db.Banks.Where(x => x.CLIENT_ID == _RequestDeposit.KoId).Select(x => x.IS_INSURANCE).FirstOrDefault();
-                                        if (_dfgdf == 0)
-                                        {
-                                            is_check = false;
-                                            _RequestDeposit.RequestDescription = _RequestDeposit.RequestDescription + "Банк не входит в Страхование вклада";
-                                        }
-                                    }
-
-
-                                    if (is_check == true)
-                                    {
-                                        _RequestDeposit.RequestStatus = 0;
-                                    }
-                                    else
-                                    {
-                                        _RequestDeposit.RequestStatus = 1;
-                                    }
-
-                                    #endregion
-
-                                    fileRequst.RequestDate = _RequestDeposit.RequestDate;
-                                    fileRequst.RequestNum = _RequestDeposit.RequestNum;
-                                    fileRequst.RequestDescription = _RequestDeposit.RequestDescription;
-
-                                    XmlSerializer formatter_to_string = new XmlSerializer(typeof(RequestDeposits));
-                                    using (StringWriter textWriter = new StringWriter())
-                                    {
-                                        formatter_to_string.Serialize(textWriter, _RequestDeposit);
-
-                                        try
-                                        {
-                                            //Создаем в FANSY карточку согласие/Отказ
-                                            _RequestDeposit = RegRequest.ProcCartRequest(_RequestDeposit, textWriter);
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            _coomet_error = ex.Message;
-                                            _logger.Error(ex, "{0} : {1} : {2} : {3}", ex.Message, ex.TargetSite, ex.StackTrace, ex.InnerException);
-                                        }
-                                    }
-                                    if (string.IsNullOrEmpty(_coomet_error))
-                                    {
-                                        //Пишем данные о статусе - номере - дате - в базу Клиента
-                                        RequestDeposits _req = client_db.RequestDeposits.Where(x => x.Id == _RequestDeposit.Id).FirstOrDefault();
-                                        _req.RequestStatus = _RequestDeposit.RequestStatus;
-                                        _req.RequestDate = _RequestDeposit.RequestDate;
-                                        _req.RequestNum = _RequestDeposit.RequestNum;
-                                        _req.RequestDescription = _RequestDeposit.RequestDescription;
-                                        // Согласие = 3 , Отказ = 4
-                                        _req.StatusObrobotki = (is_check) ? 3 : 4;
-                                        client_db.SaveChanges();
-
-
-                                        //отправка по ЭДО и копи в сэнд
-                                        RuleSystem _rule = db.RuleSystem.Include(v => v.Department)
-                                            .Where(c => c.Id == pathTOfolder.Id)
-                                            .FirstOrDefault();
-
-                                        string send_path = Path.Combine(_rule.Path.Replace(pathTOfolder.Department.NameFolderFoPath, folder_send + "\\" + _rule.Department.NameFolderFoPath), DateToString(DateTime.Today));
-                                        if (!Directory.Exists(send_path))
-                                        {
-                                            Directory.CreateDirectory(send_path);
-                                        }
-
-                                        int last = file_inf.Name.LastIndexOf("~");
-                                        string file_without = (last > 0) ? file_inf.Name.Remove(last) : Path.GetFileNameWithoutExtension(file_inf.FullName);
-
-                                        int count_file = Directory.GetFiles(send_path, file_without + "*.xml").Count();
-                                        int count_file_out = Directory.GetFiles(Path.Combine(_rule.Path, folder_out), file_without + "*.xml").Count();
-                                        count_file = (count_file < count_file_out) ? count_file_out : count_file;
-                                        string name_file = (count_file > 0) ? file_without + "~" + count_file + ".zip" : file_without + ".xml";
-
-                                        string _to_send = Path.Combine(send_path, name_file);
-                                        string _to_edo = Path.Combine(_rule.Path, folder_out, name_file);
-                                        // передаем в конструктор тип класса
-                                        XmlSerializer formatter = new XmlSerializer(typeof(RequestDeposits));
-                                        // получаем поток, куда будем записывать сериализованный объект                                    
-                                        using (FileStream fs = new FileStream(_to_send, FileMode.OpenOrCreate))
-                                        {
-                                            formatter.Serialize(fs, _RequestDeposit);
-                                        }
-                                        using (FileStream fs = new FileStream(_to_edo, FileMode.OpenOrCreate))
-                                        {
-                                            formatter.Serialize(fs, _RequestDeposit);
-                                        }
-
-                                        //Отправленный файл Запроса
-                                        FileInfo file_inf_for_out = new FileInfo(Path.Combine(send_path, name_file));
-                                        _File_collection.RuleSystem = pathTOfolder;
-                                        _File_collection.Name = file_inf_for_out.Name;
-                                        _File_collection.Extension = file_inf_for_out.Extension;
-                                        _File_collection.SizeFile = file_inf_for_out.Length;
-                                        _File_collection.DataCreate = file_inf_for_out.CreationTime;
-                                        _File_collection.OperDate = DateTime.Today;
-                                        _File_collection.RouteFile = false;
-                                        _File_collection.FileIn = File_collection;
-                                        _File_collection.FileType = FileType.FileRequestDeposit;
-                                        if (is_check)
-                                        {
-                                            _File_collection.FileStatus = FileStatus.Soglasie;
-                                        }
-                                        else
-                                        {
-                                            _File_collection.FileStatus = FileStatus.Otkaz;
-                                        }
-
-
-                                        //fileRequst.RequstId = _RequestDeposit.Id;
-                                        //fileRequst.RequestDescription = _RequestDeposit.RequestDescription;
-                                        fileRequst.RequestStatus = _RequestDeposit.RequestStatus;
-                                        //Входящий файл Запроса
-                                        File_collection.FileType = FileType.FileRequestDeposit;
-                                        File_collection.FileStatus = FileStatus.Soglasie;
-                                        //File_collection.FileRequst = fileRequst;
-
-                                        db.FileInSystem.Add(_File_collection);
-                                    }
-                                    else
-                                    {
-                                        File_collection.FileType = FileType.FileRequestDeposit;
-                                        File_collection.FileStatus = FileStatus.ErrorSoglasie;
-                                        fileRequst.Comment = _coomet_error;
-                                    }
-
-                                }
-                                else
-                                {
-                                    File_collection.FileType = FileType.FileRequestDeposit;
-                                    File_collection.FileStatus = FileStatus.ErrorSoglasie;
-                                    fileRequst.Comment = _coomet_error;
-                                }
-
-                                fileRequst.RequstId = _RequestDeposit.Id;
-                                File_collection.FileRequst = fileRequst;
-                            }
-                            else if (namesp == "DogovorDeposit")
-                            {
-                                FileRequst fileRequst = new FileRequst();
-                                FileInSystem _File_collection = new FileInSystem();
-                                string _coomet_error = string.Empty;
-                                XmlSerializer serializer = new XmlSerializer(typeof(DogovorDeposits));
-                                DogovorDeposits _DogovorDeposit;
-                                using (StreamReader reader = new StreamReader(item_file))
-                                {
-                                    _DogovorDeposit = (DogovorDeposits)serializer.Deserialize(reader);
-                                }
-
-                                try
-                                {
-                                    //Регестрируем в FANSY в журнале входящих
-                                    _DogovorDeposit = RegRequest.ProcRegDogovor(_DogovorDeposit);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _coomet_error = ex.Message;
-                                    _logger.Error(ex, "{0} : {1} : {2} : {3}", ex.Message, ex.TargetSite, ex.StackTrace, ex.InnerException);
-                                }
-
-                                if (string.IsNullOrEmpty(_coomet_error))
-                                {
-                                    var _fg = db.FileInSystem.Include(x => x.RuleSystem).Include(x => x.FileRequst).Where(r => r.FileRequst.RequstId == _DogovorDeposit.RequestId).FirstOrDefault();
-                                    string _to_xml_in = Path.Combine(_fg.RuleSystem.Path, in_folder, _fg.OperDate.ToString("yyyyMMdd"), _fg.Name);
-
-                                    XmlSerializer serializer_in = new XmlSerializer(typeof(RequestDeposits));
-                                    RequestDeposits _RequestDeposit_in;
-                                    using (StreamReader reader = new StreamReader(_to_xml_in))
-                                    {
-                                        _RequestDeposit_in = (RequestDeposits)serializer_in.Deserialize(reader);
-                                    }
-
-                                    //сравнение xml запроса с xml присланного договора
-                                    List<ListErrorEqualsDogovor> _err_equals = new List<ListErrorEqualsDogovor>();                                    
-                                    bool _boolRequst = true;
-                                    foreach (PropertyInfo item in _RequestDeposit_in.GetType().GetProperties())
-                                    {
-                                        if (!item.Name.Equals("Id"))
-                                        {
-                                            if (!_DogovorDeposit.GetType().GetProperty(item.Name).GetValue(_DogovorDeposit).Equals(item.GetValue(_RequestDeposit_in)))
-                                            {
-                                                _err_equals.Add(new ListErrorEqualsDogovor {
-                                                    Propertie = item.Name,
-                                                    ValRequest = item.GetValue(_RequestDeposit_in).ToString(),
-                                                    ValDogovor = _DogovorDeposit.GetType().GetProperty(item.Name).GetValue(_DogovorDeposit).ToString()
-                                                });
-                                                _boolRequst = false;
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (_boolRequst == true)
-                                    {
-                                        XmlSerializer formatter_to_string = new XmlSerializer(typeof(DogovorDeposits));
-                                        using (StringWriter textWriter = new StringWriter())
-                                        {
-                                            formatter_to_string.Serialize(textWriter, _DogovorDeposit);
-                                            try
-                                            {
-                                                //Регистрируем карточку договора
-                                                _DogovorDeposit = RegRequest.ProcCartDogovor(_DogovorDeposit, textWriter);
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                _coomet_error = ex.Message;
-                                                _logger.Error(ex, "{0} : {1} : {2} : {3}", ex.Message, ex.TargetSite, ex.StackTrace, ex.InnerException);
-                                            }
-                                        }
-
-                                        if (string.IsNullOrEmpty(_coomet_error))
-                                        {
-                                            DogovorDeposits _req = client_db.DogovorDeposits.Where(x => x.Id == _DogovorDeposit.Id).FirstOrDefault();
-                                            _req.RequestDate = _DogovorDeposit.RequestDate;
-                                            _req.RequestNum = _DogovorDeposit.RequestNum;
-                                            _req.StatusObrobotki = 2;
-                                            client_db.SaveChanges();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        //отдать в ручную с оповещением на email
-
-
-                                        // настройка логина, пароля отправителя
-                                        var from = "fedorov@usdep.ru";
-                                        var pass = "Jfn4d3Kr78";
-                                        var send_to = "fedorov@usdep.ru";
-
-                                        // адрес и порт smtp-сервера, с которого мы и будем отправлять письмо
-                                        SmtpClient client = new SmtpClient("mail.usdep.ru", 25);
-                                        client.EnableSsl = false;
-                                        client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                                        client.UseDefaultCredentials = false;
-                                        client.Credentials = new System.Net.NetworkCredential(from, pass);
-
-                                        MailMessage message = new MailMessage();
-                                        message.Subject = "Различие договора с согласием";
-                                        message.Body = "";
-
-                                        // создаем письмо: message.Destination - адрес получателя
-                                        var mail = new MailMessage(from, send_to);
-                                        mail.Subject = message.Subject;
-                                        mail.Body = message.Body;
-                                        mail.IsBodyHtml = true;
-                                        client.Send(mail);
-
-                                        fileRequst.RequestDescription = "Различие договора с согласием";
-                                    }
-
-                                    fileRequst.FileRequstGuid = _RequestDeposit_in.Id;
-                                    //Входящий файл Запроса
-                                    File_collection.FileType = FileType.FileRequestDeposit;
-                                    File_collection.FileStatus = FileStatus.Soglasie;
-                                }
-                            }
-                        }
+                        
                         db.FileInSystem.Add(File_collection);
                     }
                 }
@@ -823,12 +497,6 @@
             foreach (FileInfo fri in fiArr)
                 fri.Delete();
         }
-
-        private class ListErrorEqualsDogovor
-        {
-            public string Propertie { get; set; }
-            public string ValRequest { get; set; }
-            public string ValDogovor { get; set; }
-        }
+        
     }
 }

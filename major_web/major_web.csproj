@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -56,16 +56,16 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Hangfire.Core, Version=1.5.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hangfire.Core.1.5.9\lib\net45\Hangfire.Core.dll</HintPath>
+    <Reference Include="Hangfire.Core, Version=1.6.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.6\lib\net45\Hangfire.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Hangfire.Dashboard.Authorization, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Dashboard.Authorization.2.1.0\lib\net45\Hangfire.Dashboard.Authorization.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Hangfire.SqlServer, Version=1.5.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hangfire.SqlServer.1.5.9\lib\net45\Hangfire.SqlServer.dll</HintPath>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.6\lib\net45\Hangfire.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -80,16 +80,16 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -203,7 +203,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ClientsController.cs" />
+    <Compile Include="Controllers\DogovorsController.cs" />
     <Compile Include="Controllers\EnumpermissionsController.cs" />
+    <Compile Include="Controllers\FondsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RuleSystemsController.cs" />
@@ -239,6 +242,9 @@
     <Content Include="Content\imgs\loading_ring.gif" />
     <Content Include="Content\imgs\ring-alt.gif" />
     <Content Include="Content\imgs\ring-alt.svg" />
+    <Content Include="Content\material-css.css" />
+    <Content Include="Content\material.css" />
+    <Content Include="Content\material.min.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -246,6 +252,10 @@
     <Content Include="Content\Site.css" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="fonts\material\MaterialIcons-Regular.eot" />
+    <Content Include="fonts\material\MaterialIcons-Regular.ttf" />
+    <Content Include="fonts\material\MaterialIcons-Regular.woff" />
+    <Content Include="fonts\material\MaterialIcons-Regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -254,6 +264,24 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="fonts\Roboto\Roboto-Black.ttf" />
+    <Content Include="fonts\Roboto\Roboto-BlackItalic.ttf" />
+    <Content Include="fonts\Roboto\Roboto-Bold.ttf" />
+    <Content Include="fonts\Roboto\Roboto-BoldItalic.ttf" />
+    <Content Include="fonts\Roboto\Roboto-Italic.ttf" />
+    <Content Include="fonts\Roboto\Roboto-Light.ttf" />
+    <Content Include="fonts\Roboto\Roboto-LightItalic.ttf" />
+    <Content Include="fonts\Roboto\Roboto-Medium.ttf" />
+    <Content Include="fonts\Roboto\Roboto-MediumItalic.ttf" />
+    <Content Include="fonts\Roboto\Roboto-Regular.ttf" />
+    <Content Include="fonts\Roboto\Roboto-Thin.ttf" />
+    <Content Include="fonts\Roboto\Roboto-ThinItalic.ttf" />
+    <Content Include="fonts\Roboto\RobotoCondensed-Bold.ttf" />
+    <Content Include="fonts\Roboto\RobotoCondensed-BoldItalic.ttf" />
+    <Content Include="fonts\Roboto\RobotoCondensed-Italic.ttf" />
+    <Content Include="fonts\Roboto\RobotoCondensed-Light.ttf" />
+    <Content Include="fonts\Roboto\RobotoCondensed-LightItalic.ttf" />
+    <Content Include="fonts\Roboto\RobotoCondensed-Regular.ttf" />
     <None Include="Properties\PublishProfiles\IIS_VM.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -263,19 +291,21 @@
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
     <Content Include="Scripts\jquery-2.2.4.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\material.js" />
+    <Content Include="Scripts\material.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\sitejs.js" />
     <Content Include="Scripts\jquery-2.2.4.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\habsignalr.js" />
@@ -345,8 +375,24 @@
     <Content Include="Views\RuleSystems\SearchRuleSystems.cshtml" />
     <Content Include="Views\RuleSystems\AddUser.cshtml" />
     <Content Include="Views\RuleSystems\ListUserForRule.cshtml" />
-    <Content Include="Views\Home\_XMLSogl.cshtml" />
-    <Content Include="Views\Home\Edit.cshtml" />
+    <Content Include="Views\Shared\_LayoutMDL.cshtml" />
+    <Content Include="Views\Home\Mdl.cshtml" />
+    <Content Include="Views\Account\_Login.cshtml" />
+    <Content Include="Views\Clients\Create.cshtml" />
+    <Content Include="Views\Clients\Delete.cshtml" />
+    <Content Include="Views\Clients\Details.cshtml" />
+    <Content Include="Views\Clients\Edit.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\Dogovors\Create.cshtml" />
+    <Content Include="Views\Dogovors\Delete.cshtml" />
+    <Content Include="Views\Dogovors\Details.cshtml" />
+    <Content Include="Views\Dogovors\Edit.cshtml" />
+    <Content Include="Views\Dogovors\Index.cshtml" />
+    <Content Include="Views\Fonds\Create.cshtml" />
+    <Content Include="Views\Fonds\Delete.cshtml" />
+    <Content Include="Views\Fonds\Details.cshtml" />
+    <Content Include="Views\Fonds\Edit.cshtml" />
+    <Content Include="Views\Fonds\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Temp_Sverka\" />
@@ -355,10 +401,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\client_data\client_data.csproj">
-      <Project>{a3201ee8-0c33-4d44-9c56-483c30cdf412}</Project>
-      <Name>client_data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\major_call_wcf\major_call_wcf.csproj">
       <Project>{3c4ce8bb-d2e4-43ff-ba1d-dab3605f4d7c}</Project>
       <Name>major_call_wcf</Name>
@@ -366,10 +408,6 @@
     <ProjectReference Include="..\major_data\major_data.csproj">
       <Project>{9322a7cc-244c-4c21-9db7-8095770828d3}</Project>
       <Name>major_data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\major_fansyspr\major_fansyspr.csproj">
-      <Project>{5b372ca9-f0d9-46a8-86fe-1d3caa789908}</Project>
-      <Name>major_fansyspr</Name>
     </ProjectReference>
     <ProjectReference Include="..\major_scan_folder\major_scan_folder.csproj">
       <Project>{DD41DED6-15FF-4C1D-BED4-3602953DF691}</Project>
@@ -408,9 +446,9 @@
     <PropertyGroup>
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
