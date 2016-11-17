@@ -7,6 +7,9 @@
         Podpisan,
         ReOpen,
         Close,
-        Bad
+        Bad,
+        Soglasie,
+        Otkaz,
+        ErrorSoglasie
     }
 }
