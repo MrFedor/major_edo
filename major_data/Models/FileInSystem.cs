@@ -40,6 +40,5 @@
         public virtual FileInSystem FileIn { get; set; }
         public virtual RuleSystem RuleSystem { get; set; }
         public virtual CBInfo CBInfo { get; set; }
-        public virtual FileRequst FileRequst { get; set; }
     }
 }
