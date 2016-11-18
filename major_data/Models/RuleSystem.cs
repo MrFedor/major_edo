@@ -31,7 +31,7 @@
 
         [Display(Name = "Email ОСД")]
         public string RecipEmail { get; set; }
-        
+
         public bool ContinueProcessRulez { get; set; }
         public string Email { get; set; }
         public string FileMask { get; set; }
@@ -45,7 +45,7 @@
         public int NumberRule { get; set; }
 
         [Display(Name = "Клиент")]
-        public int ClientId { get; set; }
+        public int DogovorId { get; set; }
 
         [Display(Name = "Департамент")]
         public int DepartmentId { get; set; }
@@ -59,8 +59,8 @@
         [Display(Name = "Фонд")]
         public int? FondId { get; set; }
 
-        [ForeignKey("ClientId")]
-        public virtual Client Client { get; set; }
+        [ForeignKey("DogovorId")]
+        public virtual Dogovor Dogovor { get; set; }
 
         [ForeignKey("FondId")]
         public virtual Fond Fond { get; set; }

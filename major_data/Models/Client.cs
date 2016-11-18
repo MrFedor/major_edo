@@ -22,6 +22,6 @@
         [Display(Name = "Часть пути к папке ЭДО")]
         public string NameFolderFoPath { get; set; }
 
-        public virtual ICollection<RuleSystem> RuleSystems { get; set; }
+        public virtual ICollection<Dogovor> Dogovors { get; set; }
     }
 }

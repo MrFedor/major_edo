@@ -237,6 +237,7 @@
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ClientEmail.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Dogovor.cs" />
     <Compile Include="Models\Enumpermission.cs" />
     <Compile Include="Models\Fond.cs" />
     <Compile Include="Models\CBCert.cs" />
